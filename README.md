@@ -205,7 +205,3 @@ cat results/run-ipa-all.XXX.csv
 
 2. Claims
    - The performance of running CPU time may differ among machines due to the CPU and disk performance.
-
-3. Supplement statement
-
-The overall performance gain (2.8x speedup) is higher than that (1.4x speedup) reported in the submission. The main reason is that we reimplemented the CFADiff. Thanks to the new implemented algorithm, more locations and edges between the two automata are recognized as matched, leading more locations of the current program meet the prerequisite (not a new location) of assertion reuse. 
