@@ -1,8 +1,6 @@
 # IPA
 An Incremental Predicate Analysis Based Regression Verification Tool
 
-# Paper #233: Incremental Predicate Analysis for Regression Verification
-
 ## Getting Started Guide
 
 #### **Run our tool in a VM**
