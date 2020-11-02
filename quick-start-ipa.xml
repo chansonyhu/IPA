@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<!DOCTYPE benchmark
+  SYSTEM 'benchmark.dtd'>
+<benchmark cpuCores="2" memlimit="4000MB" timelimit="310" tool="cpachecker">
+	<option name="-heap">4000M</option>
+	<option name="-predicateAnalysis-IPA"/>
+	<option name="-setprop">cpa.impacted.eliminate=true</option>
+	<option name="-disable-java-assertions"/>
+	<rundefinition name="ipa.initial.68_1.input--mouse--vsxxxaa.ko.set">
+		<option name="-outputpath">${benchmark_path_abs}/output-quick-start/ipa/68_1.input--mouse--vsxxxaa.ko.set/011.dd0d544.68_1.cil_safe.i</option>
+		<option name="-stats"/>
+		<option name="-spec">${benchmark_path_abs}/LDVErrorLabel.spc</option>
+		<option name="-entryfunction">ldv_main0_sequence_infinite_withcheck_stateful</option>
+		<sourcefiles>
+			<include>${benchmark_path_abs}/programs/drivers--input--mouse--vsxxxaa.ko/011.dd0d544.68_1.cil_safe.i</include>
+		</sourcefiles>
+	</rundefinition>
+	<rundefinition name="ipa.regression.68_1.input--mouse--vsxxxaa.ko.set@1">
+		<option name="-outputpath">${benchmark_path_abs}/output-quick-start/ipa/68_1.input--mouse--vsxxxaa.ko.set/012.21602325.68_1.cil_safe.i</option>
+		<option name="-isIncPred"/>
+		<option name="-spec">${benchmark_path_abs}/LDVErrorLabel.spc</option>
+		<option name="-stats"/>
+		<option name="-setprop">cpa.impacted.pre_invariants.file=${benchmark_path_abs}/output-quick-start/ipa/68_1.input--mouse--vsxxxaa.ko.set/011.dd0d544.68_1.cil_safe.i/impacted-invariants.txt</option>
+		<option name="-setprop">analysis.prev.program=${benchmark_path_abs}/programs/drivers--input--mouse--vsxxxaa.ko/011.dd0d544.68_1.cil_safe.i</option>
+		<option name="-entryfunction">ldv_main0_sequence_infinite_withcheck_stateful</option>
+		<sourcefiles>
+			<include>${benchmark_path_abs}/programs/drivers--input--mouse--vsxxxaa.ko/012.21602325.68_1.cil_safe.i</include>
+		</sourcefiles>
+	</rundefinition>
+</benchmark>

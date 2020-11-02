@@ -1,0 +1,118 @@
+<?xml version="1.0" ?>
+<!DOCTYPE benchmark
+  SYSTEM 'benchmark.dtd'>
+<benchmark cpuCores="2" memlimit="4000MB" timelimit="310" tool="cpachecker">
+	<option name="-heap">4000M</option>
+	<option name="-predicateAnalysis-IPA"/>
+	<option name="-setprop">cpa.impacted.eliminate=true</option>
+	<option name="-disable-java-assertions"/>
+	<rundefinition name="ipa.initial.32_1.regulator--wm831x-dcdc.ko.set">
+		<option name="-outputpath">${benchmark_path_abs}/output-ipa-simple/32_1.regulator--wm831x-dcdc.ko.set/000.e4ee831.32_1.cil_safe.i</option>
+		<option name="-stats"/>
+		<option name="-spec">${benchmark_path_abs}/LDVErrorLabel.spc</option>
+		<option name="-entryfunction">ldv_main0_sequence_infinite_withcheck_stateful</option>
+		<sourcefiles>
+			<include>${benchmark_path_abs}/programs/drivers--regulator--wm831x-dcdc.ko/000.e4ee831.32_1.cil_safe.i</include>
+		</sourcefiles>
+	</rundefinition>
+	<rundefinition name="ipa.regression.32_1.regulator--wm831x-dcdc.ko.set@1">
+		<option name="-outputpath">${benchmark_path_abs}/output-ipa-simple/32_1.regulator--wm831x-dcdc.ko.set/001.8267a9b.32_1.cil_safe.i</option>
+		<option name="-isIncPred"/>
+		<option name="-spec">${benchmark_path_abs}/LDVErrorLabel.spc</option>
+		<option name="-stats"/>
+		<option name="-setprop">cpa.impacted.pre_invariants.file=${benchmark_path_abs}/output-ipa-simple/32_1.regulator--wm831x-dcdc.ko.set/000.e4ee831.32_1.cil_safe.i/impacted-invariants.txt</option>
+		<option name="-setprop">analysis.prev.program=${benchmark_path_abs}/programs/drivers--regulator--wm831x-dcdc.ko/000.e4ee831.32_1.cil_safe.i</option>
+		<option name="-entryfunction">ldv_main0_sequence_infinite_withcheck_stateful</option>
+		<sourcefiles>
+			<include>${benchmark_path_abs}/programs/drivers--regulator--wm831x-dcdc.ko/001.8267a9b.32_1.cil_safe.i</include>
+		</sourcefiles>
+	</rundefinition>
+	<rundefinition name="ipa.regression.32_1.regulator--wm831x-dcdc.ko.set@2">
+		<option name="-outputpath">${benchmark_path_abs}/output-ipa-simple/32_1.regulator--wm831x-dcdc.ko.set/002.1304850.32_1.cil_safe.i</option>
+		<option name="-isIncPred"/>
+		<option name="-spec">${benchmark_path_abs}/LDVErrorLabel.spc</option>
+		<option name="-stats"/>
+		<option name="-setprop">cpa.impacted.pre_invariants.file=${benchmark_path_abs}/output-ipa-simple/32_1.regulator--wm831x-dcdc.ko.set/001.8267a9b.32_1.cil_safe.i/impacted-invariants.txt</option>
+		<option name="-setprop">analysis.prev.program=${benchmark_path_abs}/programs/drivers--regulator--wm831x-dcdc.ko/001.8267a9b.32_1.cil_safe.i</option>
+		<option name="-entryfunction">ldv_main0_sequence_infinite_withcheck_stateful</option>
+		<sourcefiles>
+			<include>${benchmark_path_abs}/programs/drivers--regulator--wm831x-dcdc.ko/002.1304850.32_1.cil_safe.i</include>
+		</sourcefiles>
+	</rundefinition>
+	<rundefinition name="ipa.initial.39_7a.tty--serial--xilinx_uartps.ko.set">
+		<option name="-outputpath">${benchmark_path_abs}/output-ipa-simple/39_7a.tty--serial--xilinx_uartps.ko.set/000.61ec901.39_7a.cil_safe.i</option>
+		<option name="-stats"/>
+		<option name="-spec">${benchmark_path_abs}/LDVErrorLabel.spc</option>
+		<option name="-entryfunction">ldv_main0_sequence_infinite_withcheck_stateful</option>
+		<sourcefiles>
+			<include>${benchmark_path_abs}/programs/drivers--tty--serial--xilinx_uartps.ko/000.61ec901.39_7a.cil_safe.i</include>
+		</sourcefiles>
+	</rundefinition>
+	<rundefinition name="ipa.regression.39_7a.tty--serial--xilinx_uartps.ko.set@1">
+		<option name="-outputpath">${benchmark_path_abs}/output-ipa-simple/39_7a.tty--serial--xilinx_uartps.ko.set/001.ee160a3.39_7a.cil_safe.i</option>
+		<option name="-isIncPred"/>
+		<option name="-spec">${benchmark_path_abs}/LDVErrorLabel.spc</option>
+		<option name="-stats"/>
+		<option name="-setprop">cpa.impacted.pre_invariants.file=${benchmark_path_abs}/output-ipa-simple/39_7a.tty--serial--xilinx_uartps.ko.set/000.61ec901.39_7a.cil_safe.i/impacted-invariants.txt</option>
+		<option name="-setprop">analysis.prev.program=${benchmark_path_abs}/programs/drivers--tty--serial--xilinx_uartps.ko/000.61ec901.39_7a.cil_safe.i</option>
+		<option name="-entryfunction">ldv_main0_sequence_infinite_withcheck_stateful</option>
+		<sourcefiles>
+			<include>${benchmark_path_abs}/programs/drivers--tty--serial--xilinx_uartps.ko/001.ee160a3.39_7a.cil_safe.i</include>
+		</sourcefiles>
+	</rundefinition>
+	<rundefinition name="ipa.regression.39_7a.tty--serial--xilinx_uartps.ko.set@2">
+		<option name="-outputpath">${benchmark_path_abs}/output-ipa-simple/39_7a.tty--serial--xilinx_uartps.ko.set/002.578b9ce.39_7a.cil_safe.i</option>
+		<option name="-isIncPred"/>
+		<option name="-spec">${benchmark_path_abs}/LDVErrorLabel.spc</option>
+		<option name="-stats"/>
+		<option name="-setprop">cpa.impacted.pre_invariants.file=${benchmark_path_abs}/output-ipa-simple/39_7a.tty--serial--xilinx_uartps.ko.set/001.ee160a3.39_7a.cil_safe.i/impacted-invariants.txt</option>
+		<option name="-setprop">analysis.prev.program=${benchmark_path_abs}/programs/drivers--tty--serial--xilinx_uartps.ko/001.ee160a3.39_7a.cil_safe.i</option>
+		<option name="-entryfunction">ldv_main0_sequence_infinite_withcheck_stateful</option>
+		<sourcefiles>
+			<include>${benchmark_path_abs}/programs/drivers--tty--serial--xilinx_uartps.ko/002.578b9ce.39_7a.cil_safe.i</include>
+		</sourcefiles>
+	</rundefinition>
+	<rundefinition name="ipa.initial.68_1.regulator--wm831x-dcdc.ko.set">
+		<option name="-outputpath">${benchmark_path_abs}/output-ipa-simple/68_1.regulator--wm831x-dcdc.ko.set/000.e4ee831.68_1.cil_safe.i</option>
+		<option name="-stats"/>
+		<option name="-spec">${benchmark_path_abs}/LDVErrorLabel.spc</option>
+		<option name="-entryfunction">ldv_main0_sequence_infinite_withcheck_stateful</option>
+		<sourcefiles>
+			<include>${benchmark_path_abs}/programs/drivers--regulator--wm831x-dcdc.ko/000.e4ee831.68_1.cil_safe.i</include>
+		</sourcefiles>
+	</rundefinition>
+	<rundefinition name="ipa.regression.68_1.regulator--wm831x-dcdc.ko.set@1">
+		<option name="-outputpath">${benchmark_path_abs}/output-ipa-simple/68_1.regulator--wm831x-dcdc.ko.set/001.8267a9b.68_1.cil_safe.i</option>
+		<option name="-isIncPred"/>
+		<option name="-spec">${benchmark_path_abs}/LDVErrorLabel.spc</option>
+		<option name="-stats"/>
+		<option name="-setprop">cpa.impacted.pre_invariants.file=${benchmark_path_abs}/output-ipa-simple/68_1.regulator--wm831x-dcdc.ko.set/000.e4ee831.68_1.cil_safe.i/impacted-invariants.txt</option>
+		<option name="-setprop">analysis.prev.program=${benchmark_path_abs}/programs/drivers--regulator--wm831x-dcdc.ko/000.e4ee831.68_1.cil_safe.i</option>
+		<option name="-entryfunction">ldv_main0_sequence_infinite_withcheck_stateful</option>
+		<sourcefiles>
+			<include>${benchmark_path_abs}/programs/drivers--regulator--wm831x-dcdc.ko/001.8267a9b.68_1.cil_safe.i</include>
+		</sourcefiles>
+	</rundefinition>
+	<rundefinition name="ipa.regression.68_1.regulator--wm831x-dcdc.ko.set@2">
+		<option name="-outputpath">${benchmark_path_abs}/output-ipa-simple/68_1.regulator--wm831x-dcdc.ko.set/002.1304850.68_1.cil_safe.i</option>
+		<option name="-isIncPred"/>
+		<option name="-spec">${benchmark_path_abs}/LDVErrorLabel.spc</option>
+		<option name="-stats"/>
+		<option name="-setprop">cpa.impacted.pre_invariants.file=${benchmark_path_abs}/output-ipa-simple/68_1.regulator--wm831x-dcdc.ko.set/001.8267a9b.68_1.cil_safe.i/impacted-invariants.txt</option>
+		<option name="-setprop">analysis.prev.program=${benchmark_path_abs}/programs/drivers--regulator--wm831x-dcdc.ko/001.8267a9b.68_1.cil_safe.i</option>
+		<option name="-entryfunction">ldv_main0_sequence_infinite_withcheck_stateful</option>
+		<sourcefiles>
+			<include>${benchmark_path_abs}/programs/drivers--regulator--wm831x-dcdc.ko/002.1304850.68_1.cil_safe.i</include>
+		</sourcefiles>
+	</rundefinition>
+	<columns>
+		<column title="total">CPU time for CEGAR algorithm</column>
+		<column title="ref time">CPU time for refinements</column>
+		<column title="CPA time">CPU time for CPA algorithm</column>
+		<column title="refinements">Refinement times</column>
+		<column title="Heap Size">Allocated heap memory</column>
+		<column title="inv fs">Invariants file size</column>
+		<column title="pred hits">Precision file size</column>
+		<column title="inv hits">CPU time for CEGAR algorithm</column>
+	</columns>
+</benchmark>

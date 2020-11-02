@@ -1,0 +1,91 @@
+* bcbec05 USB: serial: remove driver version information
+* ae685ef USB: mos7840: fix port_probe flow
+* 80c0075 USB: mos7840: fix port-data memory leak
+* e681b66 USB: mos7840: remove invalid disconnect handling
+* 28c3ae9 USB: mos7840: remove NULL-urb submission
+* 3eb55cc USB: mos7840: fix port-device leak in error path
+* 65a4cdb USB: mos7840: fix urb leak at release
+*   d9a8074 Merge tag 'usb-3.6' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb
+|\  
+| * a125357 USB: Serial: mos7840.c: remove debug module parameter
+| * 59d33f2 USB: serial: remove debug parameter from usb_serial_debug_data()
+| * 9c134a1 USB: serial: mos7840.c: remove dbg() usage
+* |   e372dc6 Merge 3.6-rc3 into tty-next
+|\ \  
+| |/  
+* | adc8d74 tty: move the termios object into the tty
+| * 1e65848 USB: serial: Fix mos7840 timeout
+| * 5c263b9 usb: serial: mos7840: Fixup mos7840_chars_in_buffer()
+|/  
+* b9c8766 USB: mos7840: Fix compilation of usb serial driver
+* 68e2411 USB: serial: rework usb_serial_register/deregister_drivers()
+* 32078f9 USB: serial: remove usb_serial_disconnect call in all drivers
+* 5026bb0 USB: serial: remove usb_serial_probe call in all drivers
+* 3363155 USB: mos7840.c: remove dbg() tracing calls
+* 0eafe4d USB: serial: mos7840: add support for MCS7810 devices
+* 093ea2d USB: serial: mos7840: Fixed MCS7820 device attach problem
+* e7414d9 USB: serial: mos7840.c: use module_usb_serial_driver
+* 4d2a7af usb-serial: use new registration API in [k-m]* drivers
+* 22a416c USB: serial: use dev_err_console in custom write paths
+* 90ab5ee module_param: make bool parameters really bool (drivers & misc)
+* 5833041 USB: serial: remove unnecessary reinitialisations of urb->dev
+* 6580a67 USB: serial: remove duplicate returns
+* 00a0d0d tty: remove filp from the USB tty ioctls
+* 20b9d17 tiocmset: kill the file pointer argument
+* 60b33c1 tiocmget: kill off the passing of the struct file
+*   229aebb Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/jikos/trivial
+|\  
+| * 7f26b3a drivers/usb: Remove unnecessary return's from void functions
+* | 0bca1b9 tty: Convert the USB drivers to the new icount interface
+* | a0846f1 USB: serial/mos*: prevent reading uninitialized stack memory
+* | 870408c usb: serial: mos7840: Add USB IDs to support more B&B USB/RS485 converters.
+* | caf3a63 usb: serial: mos7840: Add USB ID to support the B&B Electronics USOPTL4-2P.
+|/  
+* b41709f USB: mos7840: fix null-pointer dereference
+* fe662b4 USB: mos7840: Cleanup useless header
+* a108bfc USB: tty: Prune uses of tty_request_room in the USB layer
+* 7d40d7e USB serial: make USB device id constant
+* 9e221a3 USB: mos7840: fix DMA buffers on stack and endianess bugs
+* 27f1281 USB: serial: Extra device/vendor ID for mos7840 driver
+* acf509a USB: mos7840: add device IDs for B&B electronics devices
+* a509a7e tty: USB does not need the filp argument in the drivers
+* 1e066d8 mos7840: remove old dead modem logic
+* 9d498be USB: aten uc2324 is really a moschip 7840
+* 405f557 headers: smp_lock.h redux
+* f9c99bb USB: usb-serial: replace shutdown with disconnect, release
+* 84fe6e7 USB: mos7840: fix debug log messages
+* 335f851 tty: Bring the usb tty port structure into more use
+* 2400a2b USB: removal of tty->low_latency hack dating back to the old serial code
+* 37768ad USB: fix mos7840 problem with minor numbers
+* e9b8cff USB: mos7840: add new device id
+* 50de36f USB: serial: fix up urb->status usage
+* 6b447f04 tty: Drop the lock_kernel in the private ioctl hook
+* 194343d USB: remove use of err() in drivers/usb/serial
+* c197a8d USB: remove info() macro from usb/serial drivers
+* 4a90f09 tty: usb-serial krefs
+* 880af9d mos7840: remove loads of bogus assignments to status
+* 95da310 usb_serial: API all change
+* 87521c4 USB: mos7840: test and propagate set_uart_reg return value
+* cdc9779 USB: remove unnecessary type casting of urb->context
+* 441b62c USB: replace remaining __FUNCTION__ occurrences
+* 0ba4034 USB: serial: remove unneeded number endpoints settings
+* e298449 USB: serial: Note mos7480 and option don't lock modem status
+* 11e1abb usb: Add support for the mos7820/7840-based B&B USB/RS485 converter to mos7840.c
+* dc0d5c1 USB: Spelling fixes
+* 7ced46c USB: free memory when writing fails in usb/serial/mos7840.c
+* 3d3ddce USB: mos7840: Clean up old checks and stuff
+* e94fa28 USB: mos7720, mos7840: remove redundant urb check
+* 31473aa USB: mos7840.c: turn this into a serial driver
+* 0643c72 USB: serial: mos7840: clean up urb->status usage
+* deb3d7f USB: remove useless check in mos7840 found by coverity
+* 0de9a70 USB: overhaul of mos7840 driver
+* b963a84 [PATCH] Char: tty_wakeup cleanup
+* d9b1b78 USB serial: add driver pointer to all usb-serial drivers
+* b1cff28 usb serial: Eliminate bogus ioctl code
+* 606d099 [PATCH] tty: switch to ktermios
+* 54e6ecb [PATCH] slab: remove SLAB_ATOMIC
+* 7ac9da1 USB serial: replace kmalloc+memset with kzalloc
+* ad18027 USB: mos7840.c: fix a check-after-dereference
+* 97c4965 [PATCH] mos7840 annotations
+* 7d12e78 IRQ: Maintain regs pointer globally rather than passing to IRQ handlers
+* 3f54297 USB: Moschip 7840 USB-Serial Driver

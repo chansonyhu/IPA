@@ -1,0 +1,998 @@
+* ef86b77 drbd: Fix drbdsetup wait-connect, wait-sync etc... commands
+* 13c76ab drbd: close race between drbd_set_role and drbd_connect
+* 691631c drbd: respect no-md-barriers setting also when changed online via disk-options
+* 298307e drbd: Remove obsolete check
+* f1d6a32 drbd: use copy_highpage
+* ed635cb0 drbd: if the replication link breaks during handshake, keep retrying
+* 063eacf drbd: check return of kmalloc in receive_uuids
+*   9868365 Merge branch 'drbd-8.4_ed6' into for-3.8-drivers-drbd-8.4_ed6
+|\  
+| * 328e0f1 drbd: Broadcast sync progress no more often than once per second
+| * 518a4d5 drbd: don't try to clear bits once the disk has failed
+| * fd0017c drbd: fix regression: potential NULL pointer dereference
+| * 4035e4c drbd: Fix clearing of MDF_AL_DISABLED
+| * 42839f6 drbd: log request sector offset and size for IO errors
+| * edc9f5e drbd: always write bitmap on detach
+| * e34b677 drbd: wait for meta data IO completion even with failed disk, unless force-detached
+| * 8747d30 drbd: a few more GFP_KERNEL -> GFP_NOIO
+| * bc891c9 drbd: fix potential deadlock during bitmap (re-)allocation
+| * a506c13 drbd: use list_move_tail instead of list_del/list_add_tail
+| * 1b6dd25 drbd: panic on delayed completion of aborted requests
+| * 1393b59 drbd: Remove duplicate code
+| * 70f17b6 drbd: differentiate early and later "postponing" of requests
+| * 76590cd drbd: Fix postponed requests
+| * 19fffd7 drbd: Call drbd_md_sync() explicitly after a state change on the connection
+| * d764401 drbd: Fix postponed requests
+| * b792b65 drbd: fix potential list_add corruption
+| * bc317a9 drbd: dequeue single work items in wait_for_work()
+| * 0ee98e2 drbd: temporarily suspend io in drbd_adm_disk_opts
+| * 4eb9b3c drbd: don't send out P_BARRIER with stale information
+| * 08332d7 drbd: properly call drbd_rs_cancel_all() in drbd_disconnected()
+| * 155522d drbd: Remove dead code
+| * b66623e drbd: Avoid NetworkFailure state during disconnect
+| * 39a1aa7 drbd: Protect accesses to the uuid set with a spinlock
+| * fef45d2 drbd: Write all pages of the bitmap after an online resize
+| * 5af2e8c drbd: Fix completion of requests while the device is suspended
+| * 715306f drbd: Don't unregister socket state_change callback from within the callback
+| * eb12010 drbd: disambiguation, s/ERR_DISCARD/ERR_DISCARD_IMPOSSIBLE/
+| * 427c043 drbd: disambiguation, s/DISCARD_CONCURRENT/RESOLVE_CONFLICTS/
+| * d4dabbe drbd: disambiguation, s/P_DISCARD_WRITE/P_SUPERSEDED/
+| * 46e21bb drbd: NEG_ACK does not imply a barrier-ack
+| * 99b4d8f drbd: only start a new epoch, if the current epoch contains writes
+| * 8a0bab2 drbd: Finish requests that completed while IO was frozen
+| * e959d08 drbd: Fix a potential issue with the DISCARD_CONCURRENT flag
+| * 519b6d3 drbd: fix drbd wire compatibility for empty flushes
+| * 80c6eed drbd: More random to the connect logic
+| * 92f1495 drbd: Try to connec to peer only once per cycle
+| * b666dbf drbd: Remove redundant and wrong test for NULL simplification in conn_connect()
+| * 3174f8c drbd: pass some more information to userspace.
+| * 81a3537 drbd: announce FLUSH/FUA capability to upper layers
+| * 58ffa58 drbd: introduce stop-sector to online verify
+| * 970fbde drbd: flush drbd work queue before invalidate/invalidate remote
+| * a324896 drbd: do not reset rs_pending_cnt too early
+| * 8a94317 drbd: reset congestion information before reporting it in /proc/drbd
+| * 6f3465e drbd: report congestion if we are waiting for some userland callback
+| * 0c84966 drbd: differentiate between normal and forced detach
+| * 3b9ef85 drbd: fix null pointer dereference with on-congestion policy when diskless
+| * 2701238 drbd: take error path in drbd_adm_down if interrupted by signal
+| * 9a278a7 drbd: allow read requests to be retried after force-detach
+| * 934722a drbd: __req_mod: make DISCARD_WRITE and independend case
+| * a0d856d drbd: base completion and destruction of requests on ref counts
+| * b406777 drbd: introduce completion_ref and kref to struct drbd_request
+| * 5df69ec drbd: __drbd_make_request() is now void
+| * 5da9c83 drbd: better separate WRITE and READ code paths in drbd_make_request
+| * b6dd1a8 drbd: remove struct drbd_tl_epoch objects (barrier works)
+| * d5b27b0 drbd: move the drbd_work_queue from drbd_socket to drbd_connection
+| * 8c0785a drbd: allow to dequeue batches of work at a time
+| * b379c41 drbd: transfer log epoch numbers are now per resource
+| * 9d05e7c drbd: rename drbd_restart_write to drbd_restart_request
+| * 629663c drbd: fix wrong assert in completion/retry path of failed local reads
+| * ab53b90 drbd: fix local read error hung forever
+| * 1b6f197 drbd: fix access of unallocated pages and kernel panic
+| * 7a426fd drbd: Keep the listening socket open while trying to connect to the peer
+| * 1f3e509 drbd: pull prepare_listen_socket() out of drbd_wait_for_connect()
+| * 9a51ab1 drbd: New disk option al-updates
+| * 26ec928 drbd: Stop using NLA_PUT*().
+| * 7e0f096 drbd: Remove drbd_accept() and use kernel_accept() instead
+| * 2820fd3 drbd: Move the call to listen() out of drbd_accept()
+| * c5b005a drbd: use bitmap_parse instead of __bitmap_parse
+| * 1882e22 drbd: grammar fix in log message
+| * f66ee69 drbd: bm_page_async_io: properly initialize page->private
+| * a220d29 drbd: allow bitmap to change during writeout from resync_finished
+| * 5016b82 drbd: fix race between drbdadm invalidate/verify and finishing resync
+| * 07be15b drbd: fix resend/resubmit of frozen IO
+| * 3ea35df drbd: fix spelling, remove boring development log message
+| * e4bad1b drbd: Ensure that data_size is not 0 before using data_size-1 as index
+| * a1096a6 drbd: Delay/reject other state changes while establishing a connection
+| * 27eb13e drbd: Fixed processing of disk-barrier, disk-flushes and disk-drain
+| * 9ed57dc drbd: ignore volume number for drbd barrier packet exchange
+| * 648e46b drbd: complete_conflicting_writes() should not care about connections
+| * 4439c40 drbd: simplify retry path of failed READ requests
+| * 2415308 drbd: move put_ldev from __req_mod() to the endio callback
+| * 6870ca6 drbd: factor out master_bio completion and drbd_request destruction paths
+| * 8d6cdd7 drbd: conflicting writes: make wake_up of waiting peer_requests explicit
+| * 0afd569 drbd: fix WRITE_ACKED_BY_PEER_AND_SIS to not set RQ_NET_DONE
+| * ea9d672 drbd: fix READ_RETRY_REMOTE_CANCELED to not complete if device is suspended
+| * 27a434f drbd: make OOS_HANDED_TO_NETWORK its own case
+| * 2312f0b drbd: fix potential deadlock during "restart" of conflicting writes
+| * f9916d6 drbd: don't pretend that barrier_nr == 0 was special
+| * 9dab384 drbd: fix memleak in error path in bm_rw and drbd_bm_write_range
+| * a6a7d4f drbd: missing wakeup after drbd_rs_del_all
+| * 5cdb0bf3 drbd: remove now unused seq_num member from struct drbd_request
+| * 4b8514e drbd: fix potential data corruption and protocol error
+| * d93f630 drbd: Fix a potential write ordering issue on SyncTarget nodes
+| * 81f4486 drbd: Fix a potential race that could case data inconsistency
+| * 38a05c1 drbd: Consider that bio->bi_bdev might be modified below DRBD
+| * 72585d2 drbd: add missing part_round_stats to _drbd_start_io_acct
+| * dd9b360 drbd: Fix module refcount leak in drbd_accept()
+| * 93f5afe drbd: If disk timeout expires fail only the affected volume
+| * 32db80f drbd: Consider the disk-timeout also for meta-data IO operations
+| * 25b0d6c drbd: Reinstate disabling AL updates with invalidate-remote
+| * b17f33c drbd: explicitly clear unused dp_flags in drbd_send_block
+| * 4d0fc3f drbd: Fixed compat issue with disconnecting 8.4 from a primary 8.3
+| * 1a3cde4 drbd: drbd_bm_ALe_set_all(): Remove unused function
+| * 69b6a3b drbd: restart loop in drbd_make_request() [prepare for Linux-3.2]
+| * 7da3586 drbd: Restore late assigning of tconn->data.sock and meta.sock
+| * e8cdc34 drbd: Consider that read requests could be NEG_ACKEDed
+| * b8853db drbd: fix race between disconnect and receive_state
+| * 57bcb6c drbd: Do not call generic_make_request() while holding req_lock
+| * d60de03 drbd: Load balancing method: striping
+| * 380207d drbd: Load balancing of read requests
+| * d10b4ea drbd: Get rid of "ASSERTION FAILED: tconn->current_epoch->list not empty"
+| * 615e087 drbd: add missing rcu locks around recently introduced idr_for_each
+| * 975b297 drbd: fix potential spinlock deadlock
+| * 77fede5 drbd: Fix the WO=drain implementation for multiple volumes
+| * 1e9dd29 drbd: Switch drbd_may_finish_epoch() from mdev to tconn
+| * 12038a3 drbd: Move list of epochs from mdev to tconn
+| * 1d2783d drbd: Prepare epochs per connection
+| * 4b0007c drbd: Move write_ordering from mdev to tconn
+| * 6936fcb drbd: Move the CREATE_BARRIER flag from connection to device
+| * 36baf61 drbd: Fixed an obvious copy-n-paste mistake
+| * 43de7c8 drbd: Fixes from the drbd-8.3 branch
+| * 0cfac5d drbd: Fixes from the drbd-8.3 branch
+| * 376694a drbd: Silenced compiler warnings
+| * 9bcd252 drbd: fix "stalled" empty resync
+| * 22d8114 drbd: fix bitmap writeout after aborted resync
+| * 08b165b drbd: Consider the discard-my-data flag for all volumes [bugz 359]
+| * 935be26 drbd: Improve error reporting in drbd_md_sync_page_io()
+| * 25e4093 drbd: fix connect failure with all default net-options
+| * a209b4a drbd: Update some outdated comments to match the code
+| * c4e7afd drbd: Remove unused code
+| * 4276dea drbd: Remove dead code
+| * 85d7351 drbd: Cleanup all epoch objects upon connection loss
+| * 97ddb68 drbd: detach must not try to abort non-local requests
+| * f497609 drbd: Get rid of MR_{READ,WRITE}_SHIFT
+| * 823bd83 drbd: Bugfix for the connection behavior
+| * 7d4c782 drbd: Fix the data-integrity-alg setting
+| * 71fc7ee drbd: Turn tl_apply() into tl_abort_disk_io()
+| * 1b7ab15 drbd: Fixed w_restart_disk_io() to handle non active AL-extents
+| * 9b743da drbd: Missing assignment of mdev before drbd_queue_work()
+| * 3b03ad5 drbd: Do not mod_timer() with a past time
+| * accdbcc drbd: receive_protocol(): We cannot change our own data-integrity-alg setting here
+| * d505d9b drbd: Be consistent in reporting incompatibilities in P_PROTOCOL settings
+| * fbc12f4 drbd: receive_protocol(): Make the program flow less confusing
+| * b792c35 drbd: receive_protocol(): Give variables more easily searchable names
+| * 5af172e drbd: Print memory address in hex instead of decimal in error message
+| * f2257a5 drbd: Allow to create devices with a minor number > minor_count
+| * 367d675d drbd: report net config even for resources without a single volume
+| * e0e1665 drbd: Correctly handle resources without volumes
+| * 369bea6 drbd: Fixed removal of volumes/devices from connected resources
+| * d5d7ebd drbd: on attach, enforce clean meta data
+| * cdfda63 drbd: detach from frozen backing device
+| * 2fcb8f3 drbd: Improve the "unexpected packet" error messages
+| * 9510b24 drbd: Fixed state transitions in case reading meta data failes
+| * 2ffca4f drbd: Improve compatibility with drbd's older than 8.3.7
+| * 6dff290 drbd: Rename --dry-run to --tentative
+| * d0fa7fd drbd: Remove dead code
+| * afbbfa8 drbd: Allow to pass resource options to the new-resource command
+| * 089c075 drbd: Convert the generic netlink interface to accept connection endpoints
+| * 44e52cf drbd: Rename DRBD_ADM_NEED_{CONN -> RESOURCE}
+| * 01b39b5 drbd: Split off netlink mandatory attribute handling into separate file
+| * 7c3063c drbd: Also need to check for DRBD_GENLA_F_MANDATORY flags before nla_find_nested()
+| * 789c1b6 drbd: Use the terminology suggested by the command names in the source code and messages
+| * 67b58bf drbd: spelling fix: too small
+| * fc251d5 drbd: cosmetic: fix accidental division instead of modulo when pretty printing
+| * 46530e8 drbd: Use DRBD_MINOR_COUNT_DEF in one more place
+| * a67b813 drbd: Lower log priority for an event that is definitely not an error
+| * c75b9b1 drbd: Don't use empty nested netlink attributes
+| * 1e2a255 drbd: drbd_adm_prepare(): Pass through error codes
+| * d659f2a drbd: Send PROTOCOL_UPDATE packets when appropriate
+| * 036b17e drbd: Receiving part for the PROTOCOL_UPDATE packet
+| * 7aca6c7 drbd: Allocation of int_dig_in and int_dig_vv was missing
+| * f179d76 drbd: Made cmp_after_sb() more generic into convert_after_sb()
+| * 46e1ce4 drbd: protect updates to integrits_tfm by tconn->data->mutex
+| * dcb20d1 drbd: Refuse to change network options online when...
+| * 95f8efd drbd: Fix the upper limit of resync-after
+| * 69ef82d drbd: Refer to connect-int consistently throughout the code
+| * 6394b93 drbd: Refer to resync-rate consistently throughout the code
+| * 7dc1d67 drbd: skip spurious wait_event in drbd_al_begin_io
+| * 6139f60 drbd: Rename the want_lose field/flag to discard_my_data
+| * 6f9b5f8 drbd: Make broadcast events return NO_ERROR
+| * c141ebd drbd: Removing drbd_cfg_rwsem
+| * ec0bddb drbd: Use RCU for the drbd_tconns list
+| * 81fa2e6 drbd: Refcounting for mdev objects
+| * bb77d34 drbd: Turn no-tcp-cork into tcp-cork={yes|no}
+| * e544046 drbd: Turn no-md-flushes into md-flushes={yes|no}
+| * d0c980e drbd: Turn no-disk-drain into disk-drain={yes|no}
+| * 66b2f6b drbd: Turn no-disk-flushes into disk-flushes={yes|no}
+| * 813472c drbd: RCU for rs_plan_s
+| * d589a21 drbd: Enforce limits of disk_conf members; centralized these checks
+| * 9958c85 drbd: Made the fifo object a self contained object (preparing for RCU)
+| * daeda1c drbd: RCU for disk_conf
+| * 563e4cf drbd: Introduce __s32_field in the genetlink macro magic
+| * 2ec91e0 drbd: Renamed (old|new)_conf into (old|new)_net_conf in receive_SyncParam
+| * dc97b70 drbd: Split drbd_alter_sa() into drbd_sync_after_valid() and drbd_sync_after_changed()
+| * ef5e44a drbd: drbd_dew_dev_size() gets the user requests disk_size as argument
+| * a009550 drbd: Renamed the net_conf_update mutex to conf_update
+| * 934e613 drbd: Removed dead code
+| * b966b5d drbd: Generate the drbd_set_*_defaults() functions from drbd_genl.h
+| * 009ba89 drbd: fix schedule in atomic
+| * 992d6e9 drbd: fix thread stop deadlock
+| * f3dfa40 drbd: fix race when forcefully disconnecting
+| * 88104ca drbd: Allow to change data-integrity-alg on the fly
+| * a7eb7bd drbd: Introduce a "lockless" variant of drbd_send_protocoll()
+| * 4b6ad6d drbd: Remove obsolete drbd_crypto_is_hash()
+| * 5b614ab drbd: Rename integrity_r_tfm -> peer_integrity_tfm
+| * 8d412fc drbd: Rename integrity_w_tfm -> integrity_tfm
+| * 86db061 drbd: Wrong use of RCU in receive_protocol()
+| * acb104c3 drbd: fix copy/paste error in comment
+| * b57a1e2 drbd: rename variable sc to res_opts
+| * 5ecc72c drbd: rename variable ndc to new_disk_conf
+| * 5979e36 drbd: on reconfiguration requests, mind the SET_DEFAULTS flag
+| * 0fd0ea0 drbd: Consider all crypto options in connect and in net-options
+| * d9cc6e2 drbd: fix various disconnecting races
+| * 5ee743e drbd: remove useless kobject_uevent from drbd_adm_connect
+| * a18e9d1 drbd: Removed the OBJECT_DYING and the CONFIG_PENDING bits
+| * 0ace9df drbd: Take a reference on tconn when finding a tconn by name
+| * 9dc9fbb drbd: Basic refcounting for drbd_tconn
+| * 1d04122 drbd: Eliminated drbd_free_resoruces() it is superseeded by conn_free_crypto()
+| * f5e2b8b drbd: move comment about stopping the receiver thread to where it belongs
+| * ae25b33 drbd: cmdname() enum to string convertion was missing a few constants
+| * 71932ef drbd: allow status dump request all volumes of a specific resource
+| * 302bdea drbd: Considering that the two_primaries config flag can change
+| * 91fd4da drbd: Proper locking for updates to net_conf under RCU
+| * 44ed167 drbd: rcu_read_lock() and rcu_dereference() for tconn->net_conf
+| * b032b6f drbd: Allow online change of replication protocol only with agreed_pv >= 100
+| * cd64397 drbd: Check consistency of net options when the get changed online
+| * 303d144 drbd: Runtime changeable wire protocol
+| * d3fcb49 drbd: protect all idr accesses that might sleep with drbd_cfg_rwsem
+| * ef35626 drbd: Converted drbd_cfg_mutex into drbd_cfg_rwsem
+| * 695d08f drbd: rcu_read_[un]lock() for all idr accesses that do not sleep
+| * cd1d995 drbd: Inlined drbd_free_mdev(); it got called only from one place
+| * ff370e5 drbd: drbd_delete_device() takes a struct drbd_conf * now
+| * 5cc287e drbd: Rename drbd_pp_free() to drbd_free_pages()
+| * c37c8ec drbd: Rename drbd_pp_alloc() to drbd_alloc_pages() and make it non-static
+| * 18c2d52 drbd: Rename drbd_pp_first_pages_or_try_alloc() to __drbd_alloc_pages()
+| * d4da153 drbd: Make drbd_wait_ee_list_empty() and _drbd_wait_ee_list_empty() static
+| * 045417f drbd: Rename drbd_{ ee -> peer_req }_has_active_page
+| * a990be4 drbd: Rename reclaim_net_ee(), drbd_process_done_ee(), drbd_process_done_ee(), tconn_process_done_ee() to *_peer_reqs
+| * 7721f56 drbd: Rename drbd_release_ee() to drbd_free_peer_reqs()
+| * 3967deb drbd: Rename drbd_free_ee() and variants to *_peer_req()
+| * 0db5536 drbd: Rename drbd_alloc_ee() to drbd_alloc_peer_req()
+| * e0ab6ad drbd: drbd_init_ee() no longer exists
+| * 2735a59 drbd: Make all asynchronous command handlers return 0 upon success and an error code otherwise
+| * 8599767 drbd: validate_req_change_req_state(): Return 0 upon success and an error code otherwise
+| * b55d84b drbd: Removed outdated comments and code that envisioned VNRs in header 95
+| * 0c8e36d drbd: Introduce protocol version 100 headers
+| * e658983 drbd: Remove headers from on-the-wire data structures (struct p_*)
+| * 50d0b1a drbd: Remove some fixed header size assumptions
+| * da39fec drbd: Remove now-unused int_dig_out buffer
+| * 9f5bdc3 drbd: Replace and remove old primitives
+| * 52b061a drbd: Introduce drbd_header_size()
+| * dba5858 drbd: Introduce new primitives for sending commands
+| * a17647a drbd: drbd_send_ping(), drbd_send_ping(): Return 0 upon success and an error code otherwise
+| * 8b924f1 drbd: Use tconn in request_timer_fn()
+| * 19f83c7 drbd: Implemented conn_lowest_conn()
+| * da9fbc2 drbd: Introduced a new type union drbd_dev_state
+| * 2aebfab drbd: Renamed id_susp(union drbd_state s) to drbd_suspended(struct drbd_conf *)
+| * 78bae59 drbd: Introduced drbd_read_state()
+| * e15766e drbd: improvements to activate/deactivate multiple activity log extents
+| * 23361cf drbd: get rid of bio_split, allow bios of "arbitrary" size
+| * 7726547 drbd: prepare to activate two activity log extents at once
+| * 181286a drbd: preparation commit, pass drbd_interval to drbd_al_begin/complete_io
+| * 85f103d drbd: introduce the "initialized" activity log transaction type
+| * 6038178 drbd: Change how the "handshake" packets are called
+| * e5d6f33 drbd: Change how the initial packets are called
+| * 7c96715 drbd: _conn_send_cmd(), _drbd_send_cmd(): Pass a struct drbd_socket instead of a plain socket
+| * 2bf8962 drbd: drbd_connect(): Initialize struct drbd_socket before sending anything
+| * 1952e91 drbd: Map from (connection, volume number) to device in the asender handlers
+| * e05e1e5 drbd: Pass struct packet_info down to the asender receive functions
+| * 438c837 drbd: Do not segfault if a sync dependency reaches a diskless device
+| * 778bcf2 drbd: Allow to disconnect if one volume is diskless
+| * 4a76b16 drbd: Map from (connection, volume number) to device in the receive handlers
+| * e285721 drbd: Pass struct packet_info down to the receive functions
+| * 49ba9b1 drbd: Remove useless error messages
+| * deebe19 drbd: A small cleanup in drbdd()
+| * 79ed9bd drbd: _drbd_send_bitmap(): Use the pre-allocated send buffer
+| * 5a87d92 drbd: Preallocate one page per drbd_socket as a send buffer
+| * fc56815 drbd: receive_bitmap(): Use the pre-allocated receive buffer
+| * e6ef8a5 drbd: Preallocate one page per drbd_socket as a receive buffer
+| * cb70345 drbd: Converted drbd_try_outdate_peer() from mdev to tconn
+| * a02d124 drbd: Rename the DCBP_* functions to dcbp_* and move them to where they are used
+| * 058820c drbd: Make _drbd_send_bitmap() static
+| * e307f35 drbd: Move drbd_send_ping() and drbd_send_ping_ack() to drbd_main.c
+| * 0916e0e drbd: Always use the same protocol version for the same peer
+| * 0829f5e drbd: drbd_connected(): Return an error code upon failure.
+| * a5c3190 drbd: Introduce and use drbd_recv_all_warn()
+| * 8f7bed7 drbd: Rename various functions from *_oos_* to *_out_of_sync_* for clarity
+| * 0da34df drbd: drbd_may_do_local_read(): Use bool/true/false
+| * 1097e9a drbd: Remove unnecessary assertion
+| * 3fbf4d2 drbd: drbd_md_sync_page_io(): Return 0 upon success and an error code otherwise
+| * ac29f40 drbd: _drbd_md_sync_page_io(): Return 0 upon success and an error code otherwise
+| * 22ab6a3 drbd: drbd_bm_read() never returns a positive value through drbd_bitmap_io()
+| * 82bc019 drbd: Make all command handlers return 0 upon success and an error code otherwise
+| * c696774 drbd: Add drbd_recv_all(): Receive an entire buffer
+| * a982dd5 drbd: send_bitmap_rle_or_plain(): Error handling cleanup
+| * e1c1b0f drbd: recv_resync_read(): Return 0 upon success and an error code otherwise
+| * 28284ce drbd: recv_dless_read(): Return 0 upon success and an error code otherwise
+| * fc5be83 drbd: drbd_drain_block(): Return 0 upon success and an error code otherwise
+| * 69bc7bc drbd: drbd_recv_header(): Return 0 upon success and an error code otherwise
+| * 8172f3e drbd: decode_header(): Return 0 upon success and an error code otherwise
+| * e2b3032 drbd: drbd_process_done_ee(): Return 0 upon success and an error code otherwise
+| * 99920dc drbd: Make all worker callbacks return 0 upon success and an error code otherwise
+| * b2f0ab6 drbd: Temporarily change the return type of all worker callbacks
+| * a896527 drbd: drbd_send_short_cmd(): Return 0 upon success and an error code otherwise
+| * 6bdb9b0 drbd: drbd_send_dblock(): Return 0 upon success and an error code otherwise
+| * 7fae55d drbd: _drbd_send_bio(), _drbd_send_zc_bio(): Return 0 upon success and an error code otherwise
+| * 7b57b89d drbd: drbd_send_block(): Return 0 upon success and an error code otherwise
+| * 9f69230 drbd: _drbd_send_zc_ee(): Return 0 upon success and an error code otherwise
+| * 88b390f drbd: _drbd_send_page(): Return 0 upon success and an error code otherwise
+| * b987427 drbd: _drbd_no_send_page(): Return 0 upon success and an error code otherwise
+| * 73218a3c drbd: drbd_send_oos(): Return 0 upon success and an error code otherwise
+| * db1b0b7 drbd: drbd_send_drequest_csum(): Return 0 upon success and an error code otherwise
+| * 6c1005e drbd: drbd_send_drequest(): Return 0 upon success and an error code otherwise
+| * 5b9f499 drbd: drbd_send_ov_request(): Return 0 upon success and an error code otherwise
+| * fa79abd drbd: drbd_send_ack_ex(): Return 0 upon success and an error code otherwise
+| * a9a9994 drbd: drbd_send_ack_{dp,rp}(): Return void: the result is never used
+| * dd51612 drbd: drbd_send_ack(): Return 0 upon success and an error code otherwise
+| * a8c32aa drbd: _drbd_send_ack(): Return 0 upon success and an error code otherwise
+| * d4e67d7 drbd: drbd_send_b_ack(): Return void: the result is never used
+| * 2f4e7ab drbd: drbd_send_sr_reply(): Return void: the result is never used
+| * 758970c drbd: _conn_send_state_req(): Return 0 upon success and an error code otherwise
+| * f02d4d0 drbd: drbd_send_sizes(): Return 0 upon success and an error code otherwise
+| * 9c1b7f7 drbd: drbd_gen_and_send_sync_uuid(): Return void: the result is never used
+| * 2ae5f95 drbd: drbd_send_uuids() and its variants: Return 0 upon success and an error code otherwise
+| * 387eb30 drbd: drbd_send_protocol(): Return 0 upon success and an error code otherwise
+| * e8d17b0 drbd: drbd_send_handshake(): Return 0 upon success and an error code otherwise
+| * 927036f drbd: drbd_send_state(): Return 0 upon success and an error code otherwise
+| * 103ea27 drbd: drbd_send_sync_param(): Return 0 upon success and an error code otherwise
+| * f725446 drbd: drbd_send_cmd(): Return 0 upon success and an error code otherwise
+| * 7d168ed drbd: Get rid of USE_DATA_SOCKET and USE_META_SOCKET
+| * 596a37f drbd: conn_send_cmd(): Return 0 upon success and an error code otherwise
+| * 04dfa13 drbd: _drbd_send_cmd(): Return 0 upon success and an error code otherwise
+| * ecf2363 drbd: _conn_send_cmd(): Return 0 upon success and an error code otherwise
+| * ce9879c drbd: conn_send_cmd2(): Return 0 upon success and an error code otherwise
+| * fb708e4 drbd: Add drbd_send_all(): Send an entire buffer
+| * 11b0be2 drbd: drbd_get_data_sock(): Return 0 upon success and an error code otherwise
+| * c0d42c8 drbd: drbd_send(): Return a "real" error code if we have no socket
+| * e90285e drbd: Fixed conn_lowest_minor
+| * f399002 drbd: distribute former syncer_conf settings to disk, connection, and resource level
+| * 6b75dce drbd: conn_khelper() for user mode callbacks for connections
+| * 047e95e2 drbd: Allow volumes to become primary only on one side
+| * 40cbf08 drbd: fix conn_reconfig_start without conn_reconfig_done in drbd_adm_attach
+| * e4f78ed drbd: Separate connection state changes from minor dev state changes #2
+| * f19e4f8 drbd: Converted got_Ping() and got_PingAck() from mdev to tconn
+| * a4fbda8 drbd: Allow packet handler functions that take a connection (meta connection)
+| * dfafcc8 drbd: Separate connection state changes from minor dev state changes #1
+| * 7204624 drbd: Converted receive_protocol() from mdev to tconn
+| * d9ae84e drbd: Allow packet handler functions that take a connection
+| * 8169e41 drbd: Moved CONN_DRY_RUN to the per connection (tconn) flags
+| * 38fa998 drbd: Do not modify the connection state with something else that conn_request_state()
+| * 34f646b drbd: Allow two diskless minors to be connected
+| * 2325eb6 drbd: New minors have to intherit the connection state form their connection
+| * 082a343 drbd: process_done_ee() has to handle unconfigured devices now
+| * 2de876e drbd: Ignore packets for non existing volumes
+| * 85f75dd7 drbd: introduce in-kernel "down" command
+| * 527f4b2 drbd: bail out if a config requrest is over-determined, and not matching
+| * 38f1961 drbd: new-connection and new-minor succeed, if the object already exists
+| * cffec5b drbd: Allow a Diskless Secondary volume to be removed
+| * 543cc10 drbd: drbd_adm_get_status needs to show some more detail
+| * 8432b31 drbd: allow holes in minor and volume id allocation
+| * 3b98c0c drbd: switch configuration interface from connector to genetlink
+| * 3cb7a2a drbd: get rid of drbd_bcast_ee, it is of no use anymore
+| * 569083c drbd: fix drbd_delete_device: remove vnr from volumes; idr_remove(); synchronize_rcu(); before cleanup
+| * da4a75d drbd: introduce a bio_set to allocate housekeeping bios from
+| * 9db4e77 drbd: use the newly introduced page pool for bitmap IO
+| * 35abf59 drbd: add page pool to be used for meta data IO
+| * 3c13b68 drbd: only wakeup if something changed in update_peer_seq
+| * 2c4a48d drbd: remove unused define
+| * 81a5d60 drbd: Replaced the minor_table array by an idr
+| * 774b305 drbd: Implemented new commands to create/delete connections/minors
+| * 8088319 drbd: Converted drbd_nl_(net_conf|disconnect)() from mdev to tconn
+| * 1aba4d7 drbd: Preparing the connector interface to operator on connections
+| * 2f5cdd0 drbd: Converted the transfer log from mdev to tconn
+| * 3f9cbe9 drbd: Removed the mdev parameter from the ..to_tags() and ...from_tags() functions
+| * 0e29d16 drbd: Reworked the unconfiguring and thread stopping code
+| * c66342d drbd: Remove left-over function prototypes
+| * 7201b97 drbd: Replace get_asender_cmd() with its implementation
+| * 6e849ce drbd: Get rid of P_MAX_CMD
+| * 1b3bb47 drbd: Remove redundant check
+| * 7be8da0 drbd: Improve how conflicting writes are handled
+| * 71b1c1e drbd: Use ping-timeout when waiting for missing ack packets
+| * 8ccf218 drbd: Replace atomic_add_return with atomic_inc_return
+| * 206d358 drbd: Concurrent write detection fix
+| * 8050e6d drbd: Use container_of() instead of casting
+| * 9676c76 drbd: fix a wrong likely(), updated comments
+| * c9d963a drbd: silence some log messages on bitmap IO
+| * 7ad651b drbd: new on-disk activity log transaction format
+| * 46a15bc lru_cache: allow multiple changes per transaction
+| * 45dfffe drbd: allow to select specific bitmap pages for writeout
+| * 4738fa1 drbd: use clear_bit_unlock() where appropriate
+| * 6161042 drbd: in drbd_suspend_al, set AL_SUSPENDED before unlocking the activity log
+| * 867f574 drbd: fix typo in comment
+| * 8c387de drbd: simplify condition in drbd_may_do_local_read()
+| * c670a39 drbd: Use the IS_ALIGNED() macro in some more places
+| * 8ca9844 drbd: Remove obsolete comment
+| * fcefa62 drbd: Rename drbd_endio_{pri,sec} -> drbd_{,peer_}request_endio
+| * fbe29de drbd: Rename drbd_submit_ee -> drbd_submit_peer_request
+| * df24aa4 drbd: Implemented connection wide state changes
+| * 047cd4a drbd: implemented receiving of P_CONN_ST_CHG_REQ
+| * fc3b10a drbd: Implemented receiving of P_CONN_ST_CHG_REPLY
+| * cf29c9d drbd: Implemented conn_send_state_req()
+| * 8410da8 drbd: Introduced tconn->cstate_mutex
+| * dad2055 drbd: Removed drbd_state_lock() and drbd_state_unlock()
+| * bbeb641 drbd: Killed volume0; last step of multi-volume-enablement
+| * 2a67d8b drbd: Converted drbd_send_ping() and related functions from mdev to tconn
+| * 00d5694 drbd: Generalized the work callbacks
+| * 6699b65 drbd: Moved some initializing code into drbd_new_tconn()
+| * 392c880 drbd: drbd_thread has now a pointer to a tconn instead of to a mdev
+| * 19393e1 drbd: Converted drbd_worker() from mdev to tconn
+| * 32862ec drbd: Converted drbd_asender() from mdev to tconn
+| * 4d641dd drbd: Converted drbdd_init() from mdev to tconn
+| * f1b3a6e drbd: Consolidated the setup of the thread name into the framework
+| * a21e929 drbd: Moved the mdev member into drbd_work (from drbd_request and drbd_peer_request)
+| * 360cc74 drbd: Converted drbd_free_sock() and drbd_disconnect() from mdev to tconn
+| * eefc2f7 drbd: Converted drbdd() from mdev to tconn
+| * 8082228 drbd: Converted drbd_calc_cpu_mask() and drbd_thread_current_set_cpu() from mdev to tconn
+| * 907599e drbd: Converted drbd_connect() from mdev to tconn
+| * 062e879 drbd: Use and idr data structure to map volume numbers to mdev pointers
+| * dc8228d drbd: Converted drbd_send_protocol() from mdev to tconn
+| * 13e6037 drbd: Converted drbd_do_auth() from mdev to tconn
+| * 6112087 drbd: Converted drbd_(get|put)_data_sock() and drbd_send_cmd2() to tconn
+| * 65d11ed drbd: Converted drbd_do_handshake() from mdev to tconn
+| * 9ba7aa0 drbd: Converted drbd_recv_header() from mdev to tconn
+| * ce24385 drbd: Converted decode_header() from mdev to tconn
+| * 7735105 drbd: struct packet_info to hold information of decoded packets
+| * de0ff33 drbd: Converted drbd_recv() from mdev to tconn
+| * 8a22ccc drbd: Converted drbd_send_handshake() from mdev to tconn
+| * a25b63f drbd: Converted drbd_recv_fp() from mdev to tconn
+| * dbd9eea drbd: Removed unused mdev argument from drbd_recv_short() and drbd_socket_okay()
+| * d38e787 drbd: Converted drbd_send_fp() from mdev to tconn
+| * bedbd2a drbd: Converted drbd_send() from mdev to tconn
+| * 1a7ba64 drbd: Converted helper functions for drbd_send() to tconn
+| * 0625ac1 drbd: Converted wake_asender() and request_ping() from mdev to tconn
+| * 808e37b drbd: Moved SIGNAL_ASENDER to the per connection (tconn) flags
+| * e43ef19 drbd: Moved SEND_PING to the per connection (tconn) flags
+| * 25703f8 drbd: Moved DISCARD_CONCURRENT to the per connection (tconn) flags
+| * 01a311a drbd: Started to separated connection flags (tconn) from block device flags (mdev)
+| * 7653620 drbd: Converted drbd_wait_for_connect() from mdev to tconn
+| * eac3e99 drbd: Converted drbd_try_connect() from mdev to tconn
+| * 60ae496 drbd: conn_printk() a dev_printk() alike for drbd's connections
+| * 8ea62f5 drbd: Revert "Make sure we dont send state if a cluster wide state change is in progress"
+| * e64a329 drbd: Do no sleep long in drbd_start_resync
+| * 1f04af3 drbd: Moved code
+| * bc31fe3 drbd: Eliminated the user of drbd_task_to_thread()
+| * bed879a drbd: Moved the thread name into the data structure
+| * b890733 drbd: Moved the state functions into its own source file
+| * db830c4 drbd: Local variable renames: e -> peer_req
+| * 6c852be drbd: Update some comments
+| * f6ffca9 drbd: Rename struct drbd_epoch_entry to struct drbd_peer_request
+| * 43ae077 drbd: Make the peer_seq updating code more obvious
+| * 6024fec drbd: Defer new writes when detecting conflicting writes
+| * ddd8877 drbd: Remove unnecessary reference counting left-over
+| * 5e47226 drbd: _req_conflicts(): Get rid of the epoch_entries tree
+| * 5384064 drbd: Allow to wait for the completion of an epoch entry as well
+| * a500c2e drbd: struct drbd_request: Introduce a new collision flag
+| * 9e204cd drbd: Move some functions to where they are used
+| * 3e394da drbd: Move sequence number logic into drbd_receiver.c and simplify it
+| * cc37827 drbd: Initialize the sequence number sent over the network even when not used
+| * bdc7adb drbd: Remove redundant initialization
+| * d876302 drbd: Rename "enum drbd_packets" to "enum drbd_packet"
+| * f2ad906 drbd: Move cmdname() out of drbd_int.h
+| * b42a70a drbd: Do not access tconn after it was freed
+| * 257d0af drbd: Implemented receiving of new style packets on meta socket
+| * fd340c1 drbd: Use new header layout
+| * c012949 drbd: Replaced all p_header80 with a generic p_header
+| * c6d25cf drbd: Preparing to use p_header96 for all packets
+| * 191d3cc drbd: Made drbd_flush_workqueue() to take a tconn instead of an mdev
+| * a063845 drbd: moved crypto transformations and friends from mdev to tconn
+| * 87eeee4 drbd: moved req_lock and transfer log from mdev to tconn
+| * 31890f4 drbd: moved agreed_pro_version, last_received and ko_count to tconn
+| * e6b3ea8 drbd: moved receiver, worker and asender from mdev to tconn
+| * e42325a drbd: moved data and meta from mdev to tconn
+| * b2fb6db drbd: moved net_cont and net_cnt_wait from mdev to tconn
+| * 89e58e7 drbd: moved net_conf from mdev to tconn
+| * 2111438 drbd: Minimal struct drbd_tconn
+| * 70dc65e drbd: Remove some useless paranoia code
+| * 841ce24 drbd: Replace the ERR_IF macro with an assert-like macro
+| * e77a0a5 drbd: Convert all constants in enum drbd_thread_state to upper case
+| * 8554df1 drbd: Convert all constants in enum drbd_req_event to upper case
+| * bb3bfe9 drbd: Remove the unused hash tables
+| * 8b94625 drbd: Use interval tree for overlapping epoch entry detection
+| * 010f6e6 drbd: Put sector and size in struct drbd_epoch_entry into struct drbd_interval
+| * bc9c5c4 drbd: Use the read and write request trees for request lookups
+| * dac1389 drbd: Add read_requests tree
+| * de69671 drbd: Use interval tree for overlapping write request detection
+| * ace652a drbd: Put sector and size in struct drbd_request into struct drbd_interval
+| * c3afd8f drbd: Request lookup code cleanup (4)
+| * ae3388d drbd: Request lookup code cleanup (3)
+| * 668eebc drbd: Request lookup code cleanup (2)
+| * 5162458 drbd: Request lookup code cleanup (1)
+| * 9c50842 drbd: Update outdated comment
+| * d628769 drbd: Move drbd_free_tl_hash() to drbd_main()
+| * 579b57e drbd: Magic reserved block_id value cleanup
+| * e7fad8a drbd: Endianness convert the constants instead of the variables
+| * ca9bc12 drbd: Get rid of BE_DRBD_MAGIC and BE_DRBD_MAGIC_BIG
+| * 9a8e775 drbd: Consistently use block_id == ID_SYNCER for checksum based resync and online verify
+| * 28c455c drbd: Get rid of req_validator_fn typedef
+* | ccae786 drbd: log request sector offset and size for IO errors
+* | a2a3c74f drbd: always write bitmap on detach
+* | 06f10ad drbd: prepare for more than 32 bit flags
+* | 44edfb0 drbd: wait for meta data IO completion even with failed disk, unless force-detached
+* | 8b45a5c drbd: a few more GFP_KERNEL -> GFP_NOIO
+* | 0b143d4 drbd: fix potential deadlock during bitmap (re-)allocation
+* | 7fb907c drbd: panic on delayed completion of aborted requests
+* | dbd0820 drbd: Remove dead code
+* | 599377a drbd: Avoid NetworkFailure state during disconnect
+* | c12a3d8 drbd: Fix a potential issue with the DISCARD_CONCURRENT flag
+* | 02b91b5 drbd: introduce stop-sector to online verify
+* | 9f2247b drbd: Protect accesses to the uuid set with a spinlock
+* | 395c72a block: Generalized bio pool freeing
+* |   a7e546f Merge branch 'for-linus' of git://git.kernel.dk/linux-block
+|\ \  
+| * | d1aa4d0 drbd: Write all pages of the bitmap after an online resize
+| * | 509fc01 drbd: Finish requests that completed while IO was frozen
+| * | 227f052 drbd: fix drbd wire compatibility for empty flushes
+* | | d97482e drbd: nuke pdflush from comments
+|/ /  
+* | a73ff32 drbd: announce FLUSH/FUA capability to upper layers
+* | db141b2 drbd: fix max_bio_size to be unsigned
+* | 7ee1fb9 drbd: flush drbd work queue before invalidate/invalidate remote
+* | c12e9c8 drbd: fix potential access after free
+* | 63a6d0b drbd: call local-io-error handler early
+* | 0029d62 drbd: do not reset rs_pending_cnt too early
+* | 8843787 drbd: reset congestion information before reporting it in /proc/drbd
+* | c2ba686 drbd: report congestion if we are waiting for some userland callback
+* | 383606e drbd: differentiate between normal and forced detach
+* |   6d407cf Merge branch 'for-jens' of git://git.drbd.org/linux-drbd into for-linus
+|\ \  
+| * | 0d5934e drbd: fix null pointer dereference with on-congestion policy when diskless
+| * | 1ed25b2 drbd: fix list corruption by failing but already aborted reads
+| * | 4eccc57 drbd: fix access of unallocated pages and kernel panic
+* | |   a70f35a Merge branch 'for-3.5/drivers' of git://git.kernel.dk/linux-block
+|\ \ \  
+| |/ /  
+| * | 92b4ca2 drbd: grammar fix in log message
+| * | bc4854b drbd: check MODULE for THIS_MODULE
+| * | f6d0a8d drbd: Restore the request restart logic
+| * | 9476f39 drbd: introduce a bio_set to allocate housekeeping bios from
+| * | 3c2f7a8 drbd: remove unused define
+| * | 0c7db27 drbd: bm_page_async_io: properly initialize page->private
+| * | 4d95a10 drbd: use the newly introduced page pool for bitmap IO
+| * | 4281808 drbd: add page pool to be used for meta data IO
+| * | 0e8488a drbd: allow bitmap to change during writeout from resync_finished
+| * | a574daf drbd: fix race between drbdadm invalidate/verify and finishing resync
+| * | ba280c0 drbd: fix resend/resubmit of frozen IO
+| * | 5de7382 drbd: Ensure that data_size is not 0 before using data_size-1 as index
+| * | 197296f drbd: Delay/reject other state changes while establishing a connection
+| * | 46385c8 drbd: move put_ldev from __req_mod() to the endio callback
+| * | d64957c drbd: fix WRITE_ACKED_BY_PEER_AND_SIS to not set RQ_NET_DONE
+| * | 41c4a00 drbd: fix READ_RETRY_REMOTE_CANCELED to not complete if device is suspended
+| * | 6d49e10 drbd: make OOS_HANDED_TO_NETWORK its own case
+| * | c088b2d drbd: don't pretend that barrier_nr == 0 was special
+| * | 1abc2af drbd: missing wakeup after drbd_rs_del_all
+| * | 671a74e drbd: remove now unused seq_num member from struct drbd_request
+| * | 001a886 drbd: fix potential data corruption and protocol error
+| * | b6a370ba drbd: Fix a potential write ordering issue on SyncTarget nodes
+| * | fc28845 drbd: Fix a potential race that could case data inconsistency
+| * | 031a7c1 drbd: add missing part_round_stats to _drbd_start_io_acct
+| * | 47a4f1c drbd: Fix module refcount leak in drbd_accept()
+| * | 7caacb6 drbd: Consider the disk-timeout also for meta-data IO operations
+| * | 4afc433 drbd: Do not send state packets while lower than C_CONNECTED cstate
+| * | 545752d drbd: fix race between disconnect and receive_state
+| * | 763eb63 drbd: fix potential spinlock deadlock
+| * | e89868a drbd: Fixed an obvious copy-n-paste mistake
+| * | f479ea0 drbd: send intermediate state change results to the peer
+| * | a2e9138 drbd: fix spurious meta data IO "error"
+| * | aaae506 drbd: Fixed a race condition between detach and start of resync
+| * | 6a9a92f drbd: fix harmless race to not trigger an ASSERT
+| * | 5ba3dac drbd: Derive sync-UUIDs only from the bitmap-uuid if it is non-zero
+| * | 7b4e4d3 drbd: drbd_nl_resize(): Fix missing put_ldev() on error path
+| * | 40424e4 drbd: fix "stalled" empty resync
+| * | 1e86ac4 drbd: Bugfix for the connection behavior
+| * | 80f9fd5 drbd: Cleanup all epoch objects upon connection loss
+| * | fd2491f drbd: detach must not try to abort non-local requests from drbd-8.4
+| * | 79f16f5 drbd: Consider that the no-data-condition could be in connected state
+| * | bca482e drbd: Fixed current UUID generation
+| * | 22f46ce drbd: change some GFP_KERNEL to GFP_NOIO
+| * | dfa8bed drbd: Implemented the disk-timeout option
+| * | 02ee8f9 drbd: Force flag for the detach operation
+| * | 9e58c4d drbd: Bitmap IO functions can now return prematurely if the disk breaks
+| * | d1f3779 drbd: Added a kref to bm_aio_ctx
+| * | b205762 drbd: Hold a reference to ldev while doing meta-data IO
+| * | 4a2fe56 drbd: Keep a reference to the bio until the completion handler finished
+| * | 0c46442 drbd: Implemented wait_until_done_or_disk_failure()
+| * | e171173 drbd: Replaced md_io_mutex by an atomic: md_io_in_use
+| * | cc94c65 drbd: moved md_io into mdev
+| * | 2b4dd36 drbd: Immediately allow completion of IOs, that wait for IO completions on a failed disk
+| * | 6d7e32f drbd: Keep a reference to barrier acked requests
+| * | 6809384 drbd: Improve compatibility with drbd's older than 8.3.7
+| * | 77e8fdf drbd: Only print sanitize state's warnings, if the state change happens
+| * | 0766734 drbd: downgraded error printk to info
+| * | 7948bcd drbd: spelling fix: too small
+| * | 1381e9a drbd: cosmetic: fix accidental division instead of modulo when pretty printing
+| * | ebd2b0c drbd: Lower log priority for an event that is definitely not an error
+* | |   0289403 Merge git://git.kernel.org/pub/scm/linux/kernel/git/davem/net
+|\ \ \  
+* | | | 4a17fd5 sock: Introduce named constants for sk_reuse
+| |/ /  
+|/| |   
+| * | 38bf195 connector/userns: replace netlink uses of cap_raised() with capable()
+|/ /  
+* | 70834d3 usermodehelper: use UMH_WAIT_PROC consistently
+* | 589973a drbd: remove the second argument of k[un]map_atomic()
+* | cfd8005 block: remove the second argument of k[un]map_atomic()
+* | 90ab5ee module_param: make bool parameters really bool (drivers & misc)
+* |   b4fdcb0 Merge branch 'for-3.2/core' of git://git.kernel.dk/linux-block
+|\ \  
+| * \   5c04b42 Merge branch 'v3.1-rc10' into for-3.2/core
+| |\ \  
+| * | | 5a7bbad block: remove support for bio remapping from ->make_request
+| | |/  
+| |/|   
+* | |   e060c38 Merge branch 'master' into for-next
+|\ \ \  
+| | |/  
+| |/|   
+* | | 1d273b9 drbd: Use angle brackets for system includes
+* | | 57f3224 drbd: Convert vmalloc/memset to vzalloc
+| |/  
+|/|   
+| * ddad9ef drivers/block/drbd/drbd_nl.c: use bitmap_parse instead of __bitmap_parse
+|/  
+* 86e1e98 drbd: we should write meta data updates with FLUSH FUA
+* cb6518c drbd: when receive times out on meta socket, also check last receive time on data socket
+* 5a8b424 drbd: account bitmap IO during resync as resync-(related-)-io
+* 8ccee20 drbd: don't cond_resched_lock with IRQs disabled
+* 829c608 drbd: add missing spinlock to bitmap receive
+* 0cfdd24 drbd: Use the correct max_bio_size when creating resync requests
+* 9b2f61a drbd: fix warning
+* 24c4830 drbd: Fix spelling
+* 9a0d9d0 drbd: fix schedule in atomic
+* 99432fc drbd: Take a more conservative approach when deciding max_bio_size
+* 21423fa drbd: Fixed state transitions after async outdate-peer-handler returned
+* fa7d939 drbd: Disallow the peer_disk_state to be D_OUTDATED while connected
+* a8e4079 drbd: Fix for the connection problems on high latency links
+* 76727f6 drbd: fix potential activity log refcount imbalance in error path
+* f36af18 drbd: fix disconnect/reconnect loop, if ping-timeout == ping-int
+* 53ea433 drbd: fix potential distributed deadlock
+* 738a84b drbd: Fix for application IO with the on-io-error=pass-on policy
+* 25985ed Fix common misspellings
+* 7e599e6 drbd: fix up merge error
+*   8d49a775 Merge branch 'for-2.6.39/drivers' of git://git.kernel.dk/linux-2.6-block
+|\  
+| * f0ff135 drbd: need include for bitops functions declarations
+| * 0356781 drbd: drop code present under #ifdef which is relevant to 2.6.28 and below
+| * 7961243 drbd: Fixed handling of read errors on a 'VerifyS' node
+| * 8f21420 drbd: Fixed handling of read errors on a 'VerifyT' node
+| * 7fde2be drbd: Implemented real timeout checking for request processing time
+| * c5a9161 drbd: Remove unused function atodb_endio()
+| * fdda654 drbd: improve log message if received sector offset exceeds local capacity
+| * e99dc36 drbd: kill dead code
+| * 10f6d99 drbd: don't BUG_ON, if bio_add_page of a single page to an empty bio fails
+| * 039312b drbd: Removed left over, now wrong comments
+| * 873b0d5 drbd: serialize admin requests for new verify run with pending bitmap io
+| * e636db5 drbd: fix potential imbalance of ap_in_flight
+| * 0ddc554 drbd: silence some noisy log messages during disconnect
+| * 20ceb2b drbd: describe bitmap locking for bulk operation in finer detail
+| * 62b0da3 drbd: log UUIDs whenever they change
+| * d07c9c1 drbd: We can not process BIOs with a size of 0
+| * cd88d03 drbd: Provide hints with the error message when clearing the sync pause flag
+| * 79a30d2 drbd: queue bitmap writeout more intelligently
+| * 54b956a drbd: don't pointlessly queue bitmap send, if we lost connection
+| * 194bfb3 drbd: serialize admin requests for new resync with pending bitmap io
+| * 6c922ed drbd: only generate and send a new sync uuid after a successful state change
+| * 20ee639 drbd: cleaned up __set_current_state() followed by schedule_timeout() calls
+| * 6a35c45 drbd: Ensure that an epoch contains only requests of one kind
+| * 2deb833 drbd: Fixed P_NEG_ACK processing for protocol A and B
+| * 94f2b05 drbd: Killed an assert that is no longer valid
+| * 148efa1 drbd: Do not drop net config if sending in drbd_send_protocol() fails
+| * 370a43e drbd: Work on the Ahead -> SyncSource transition
+| * 71c78cf drbd: Nothing should stop SyncSource -> Ahead transitions
+| * 4a23f26 drbd: Do not full sync if a P_SYNC_UUID packet gets lost
+| * 2b8a90b drbd: Corrected off-by-one error in DRBD_MINOR_COUNT_MAX
+| * 794abb7 drbd: Cleaned up the resync timer logic
+| * da0a781 drbd: Be more careful with SyncSource -> Ahead transitions
+| * d612d30 drbd: No longer answer P_RS_DATA_REQUEST packets when in C_AHEAD mode
+| * 617049a drbd: Fixed an issue with AHEAD -> SYNC_SOURCE transitions
+| * 0719427 drbd: ratelimit io error messages
+| * 3f98688 drbd: There might be a resync after unfreezing IO due to no disk [Bugz 332]
+| * 725a97e drbd: fix potential access of on-stack wait_queue_head_t after return
+| * 06d33e9 drbd: improve on bitmap write out timing
+| * 418e0a9 drbd: spelling fix in log message
+| * 7648cdf drbd: be less noisy with some log messages
+| * 5a22db8 drbd: serialize sending of resync uuid with pending w_send_oos
+| * f735e36 drbd: add debugging assert to make sure the protocol is clean
+| * c88d65e drbd: Documenting drbd_should_do_remote() and drbd_should_send_oos()
+| * 2265b47 drbd: fix potential dereference of NULL pointer
+| * 02851e9 drbd: move bitmap write from resync_finished to after_state_change
+| * 84e7c0f drbd: Removed a reference to debug macros removed long time ago
+| * 6850c44 drbd: get rid of unused debug code
+| * 4b0715f drbd: allow petabyte storage on 64bit arch
+| * 19f843a drbd: bitmap keep track of changes vs on-disk bitmap
+| * 95a0f10 drbd: store in-core bitmap little endian, regardless of architecture
+| * 7777a8b drbd: bitmap: don't count unused bits (fix non-terminating resync)
+| * 1b881ef drbd: Rename __inc_ap_bio_cond to may_inc_ap_bio
+| * 24dccab drbd: Fix: drbd_bitmap_io does not return an enum determine_dev_size
+| * 2c46407 drbd: receive_bitmap_plain: Get rid of ugly and useless enum
+| * f70af11 drbd: send_bitmap_rle_or_plain: Get rid of ugly and useless enum
+| * 78fcbda drbd: receive_bitmap: Missing free_page() on error path
+| * de1f8e4 drbd: receive_bitmap: Avoid casting enum drbd_state_rv to int
+| * 4114be8 drbd: receive_bitmap: Fix the wrong return value
+| * f2024e7 drbd: drbd_nl_disk_conf: Avoid a compiler warning
+| * 81e8465 drbd: Use the standard bool, true, and false keywords
+| * 6184ea2 drbd: This code is dead now
+| * bb43794 drbd: Another small enum drbd_state_rv cleanup
+| * bf885f8 drbd: Be more explicit about functions that return an enum drbd_state_rv
+| * c8b3256 drbd: Rename enum drbd_state_ret_codes to enum drbd_state_rv
+| * 116676c drbd: Rename enum drbd_ret_codes to enum drbd_ret_code
+| * 0cf9d27 drbd: Get rid of unnecessary macros (2)
+| * 662d91a drbd: Get rid of unnecessary macros (1)
+| * 2f58dcf drbd: Rename drbd_make_request_26 to drbd_make_request
+| * cab2f74 drbd: Make sure that drbd_send() has sent the right number of bytes
+| * 220df4d drbd: fix incomplete error message
+| * 7e458c3 drbd: Removed an unnecessary #undef
+| * 8a3c104 drbd: fix regression, we need to close drbd epochs during normal operation
+| * 09b9e79 drbd: Implemented the before-resync-source handler
+| * 2561b9c drbd: --force option for disconnect
+| * 42ff269 drbd: add packet_type 27 (return_code_only) to netlink api
+| * 3e3a776 drbd: use kzalloc and memset(,0,) to start with clean buffers in drbd_nl
+| * 17a93f3 drbd: remove /proc/drbd before unregistering from netlink
+| * 3da127f drbd: increase module count on /proc/drbd access
+| * c507f46 drbd: Removed 20 seconds upper bound for side-stepping
+| * 1fc80cf drbd: Becoming sync target may not happen out of < C_WF_REPORT_PARAMS
+| * 3719094 drbd: Starting with protocol 96 we can allow app-IO while receiving the bitmap
+| * ab17b68 drbd: Improvements in sanitize_state()
+| * 22afd7e drbd: Fixed race condition in drbd_queue_bitmap_io
+| * 127b317 drbd: use test_and_set_bit() to decide if bm_io_work should be queued
+| * aeda1cd drbd: Begin to account BIO processing time before inc_ap_bio()
+| * f91ab62 drbd: Implemented side-stepping in drbd_res_begin_io()
+| * 9d77a5f drbd: Make some functions static
+| * e3555d8 drbd: Implemented priority inheritance for resync requests
+| * 59817f4 drbd: Do not cleanup resync LRU for the Ahead/Behind SyncSource/SyncTarget transitions
+| * c4752ef drbd: When proxy's buffer drained off go into regular resync mode
+| * 73a01a1 drbd: New packet for Ahead/Behind mode: P_OUT_OF_SYNC
+| * 6753171 drbd: Implemented two new connection states Ahead/Behind
+| * 422028b drbd: New configuration parameters for dealing with network congestion
+| * 759fbdf drbd: Track the numbers of sectors in flight
+| * 688593c drbd: Renamed write_flags_to_bio() to wire_flags_to_bio()
+| * 4896e8c drbd: restore compatibility with 32bit kernels
+| * 1816a2b drbd: properly use max_hw_sectors to limit the our bio size
+| * 3129b1b drbd: debug: limit nelink-broadcast of request on digest mismatch to 32k
+| * 470be44 drbd: detect modification of in-flight buffers
+| * 5f9915b drbd: further converge progress display of resync and online-verify
+| * 18edc0b drbd: fix potential wrap of 32bit oos:%lu display in /proc/drbd
+| * 2649f08 drbd: use the resync controller for online-verify requests as well
+| * e65f440 drbd: factor out drbd_rs_number_requests
+| * 9bd28d3 drbd: factor out drbd_rs_controller_reset
+| * 439d595 drbd: show progress bar and ETA for online-verify
+| * ea5442a drbd: advance progress step marks for online-verify
+| * c6ea14d drbd: factor out advancement of resync marks for progress reporting
+| * de228bb drbd: initialize online-verify progress tracking on verify target
+| * 30b743a drbd: improve online-verify progress tracking
+| * 2652561 drbd: only reset online-verify start sector if verify completed
+* |   6c51038 Merge branch 'for-2.6.39/core' of git://git.kernel.dk/linux-2.6-block
+|\ \  
+| |/  
+| * 721a960 block: kill off REQ_UNPLUG
+| * 7eaceac block: remove per-queue plugging
+* | 01a16b2 netlink: kill eff_cap from struct netlink_skb_parms
+|/  
+*   275220f Merge branch 'for-2.6.38/core' of git://git.kernel.dk/linux-2.6-block
+|\  
+| *   f30195c Merge branch 'cleanup-bd_claim' of git://git.kernel.org/pub/scm/linux/kernel/git/tj/misc into for-2.6.38/core
+| |\  
+| | * d4d7762 block: clean up blkdev_get() wrappers and their users
+| | * e525fd8 block: make blkdev_get/put() handle exclusive access
+* | | a115413 drbd: fix for spin_lock_irqsave in endio callback
+* | | c13f7e1 drbd: don't recvmsg with zero length
+* | | 451a3c2 BKL: remove extraneous #include <smp_lock.h>
+|/ /  
+* |   00e375e Merge branch 'for-2.6.37/drivers' into for-linus
+|\ \  
+| |/  
+|/|   
+| *   53c2eb2 Merge branch 'for-jens' of git://git.drbd.org/linux-2.6-drbd into for-2.6.37/drivers
+| |\  
+| | * 650789c drbd: Removed checks for REQ_HARDBARRIER on incomming BIOs
+| | * a8a4e51 drbd: REQ_HARDBARRIER -> REQ_FUA transition for meta data accesses
+| | * 2451fc3 drbd: Removed the BIO_RW_BARRIER support form the receiver/epoch code
+| | * 8825f7c drbd: Silenced an assert
+| | * fb2c7a1 drbd: rate limit an error message
+| | * bc571b8 drbd: fix a misleading printk
+| | * 6719fb0 drbd: fix potential data divergence after multiple failures
+| | * 82f59cc drbd: fix potential deadlock on detach
+| | * aaa8e2b drbd: consolidate explicit drbd_md_sync into drbd_create_new_uuid
+* | | 2027ae1 drivers/block/drbd/drbd_main.c: fix error path
+|/ /  
+* |   a288709 Merge branch 'for-2.6.37/barrier' of git://git.kernel.dk/linux-2.6-block
+|\ \  
+| * | dd3932e block: remove BLKDEV_IFL_WAIT
+* | |   8abfc6e Merge branch 'for-2.6.37/drivers' of git://git.kernel.dk/linux-2.6-block
+|\ \ \  
+| | |/  
+| |/|   
+| * | 5dbfe7a drbd: add race-breaker to drbd_go_diskless
+| * | ac72412 drbd: use dynamic_dev_dbg to optionally log uuid changes
+| * | 2265769 drbd: cleanup: change "<= 0" to "== 0"
+| * | ca0e609 drbd: relax the grace period of the md_sync timer again
+| * | 856c50c drbd: add some more explicit drbd_md_sync
+| * | 9d28287 drbd: drop wrong debug asserts, fix recently introduced race
+| * | 0f8488e drbd: cleanup useless leftover warn/error printk's
+| * | 13d4268 drbd: add explicit drbd_md_sync to drbd_resync_finished
+| * | b18b37b drbd: Do not log an ASSERT for P_OV_REQUEST packets while C_CONNECTED
+| * | e9e6f3e drbd: fix for possible deadlock on IO error during resync
+| * | 22cc37a drbd: fix unlikely access after free and list corruption
+| * | af85e8e drbd: fix for spurious fullsync (uuids rotated too fast)
+| * | e9ef7bb drbd: allow for explicit resync-finished notifications
+| * | 4ac4aad drbd: preparation commit, using full state in receive_state()
+| * | 2b2bf21 drbd: drbd_send_ack_dp must not rely on header information
+| * | 004352f drbd: Fix regression in recv_bm_rle_bits (compressed bitmap)
+| * | f10f262 drbd: Fixed a stupid copy and paste error
+| * | f65363c drbd: fix possible access after free
+| * | 8979d9c drbd: protocol compatibility for maximum packet sizes
+| * | fb22c40 drbd: Track the reasons to suspend IO in dedicated state bits
+| * | 78db892 drbd: DIV_ROUND_UP not needed here
+| * | 5a75cc7 drbd: Fixed compatibility with protocol versions smaller than 95
+| * | f2906e1 drbd: fix for spurious full sync (becoming sync target looked like invalidate)
+| * | 02bc717 drbd: cosmetic, don't report resync for online-verify
+| * | a821cc4 drbd: fix spurious protocol error
+| * | 1d53f09 drbd: fix potential kernel BUG (NULL deref)
+| * | 435f074 drbd: don't count sendpage()d pages only referenced by tcp as in use
+| * | 76d2e7e drbd: Adding support for BIO/Request flags: REQ_FUA, REQ_FLUSH and REQ_DISCARD
+| * | 1090c05 drbd: drbd_md_sync before calling user space helpers
+| * | ee15b03 drbd: fix race on meta-data update, addendum
+| * | 63106d3 drbd: Removed a race that could cause unexpected execution of w_make_resync_request()
+| * | ef50a3e drbd: implicitly create unconfigured devices on sync-after dependencies
+| * | 3f3a9b8 drbd: fix race on meta-data update
+| * | c518d04 drbd: fix race between deconfiguring and reconfiguring network
+| * | 0778286 drbd: Disable activity log updates when the whole device is out of sync
+| * | d537338 drbd: Actually allow BIOs up to 128k (was 32k).
+| * | 02918be drbd: receiving of big packets, for payloads between 64kByte and 4GByte
+| * | 0b70a13 drbd: Sending of big packets, for payloads from 64KByte to 4GByte
+| * | 204bba9 drbd: Bugfix for regression introduced with f9bc8913c06022e
+| * | 48acf86 drbd: Microfix: Assigning sector once is sufficient
+| * | 0f0601f drbd: new configuration parameter c-min-rate
+| * | 80a40e4 drbd: reduce code duplication when receiving data requests
+| * | 1d7734a drbd: use rolling marks for resync speed calculation
+| * | c36c3ce drbd: let drbd_free_ee implicitly free any digest
+| * | 8571957 drbd: Replaced some casts by an union. Improved comments
+| * | d207450 drbd: Bugfix: rs_in_flight could become wrong if read_for_csum() requested reschedule later
+| * | 778f271 drbd: The new, smarter resync speed controller
+| * | 8e26f9c drbd: New sync_param packet, that includes the parameters of the new controller
+| * | 9a31d71 drbd: New sync parameters for the smart resync rate controller
+| * | d28fd09 drbd: fix list corruption (recent regression)
+| * | e756414 drbd: Initialize all members of sync_conf to their defaults [Bugz 315]
+| * | 6709893 drbd: Make sure tl_restart(, resend) can not get called multiple times for a new connection
+| * | f70b351 drbd: Do not try to free tl_hash in drbd_disconnect() when IO is suspended
+| * | 8f48815 drbd: Allow attach while IO is suspended
+| * | cfa0341 drbd: Allow tl_restart() to do IO completion while IO is suspended
+| * | 84dfb9f drbd: Fixed a deadlock, probably only affected UP machines
+| * | 65d922c drbd: Do not do a hard state change when establishing a connection [bugz 304]
+| * | 481c6f5 drbd: Ensure that the peer was not rebootet in the meantime before resending TL
+| * | 43a5182 drbd: Delayed creation of current-UUID
+| * | 87f7be4 drbd: Run the fence-peer helper asynchronously
+| * | 1616a25 drbd: Reduce the verbosity of some state transitions
+| * | 999122b drbd: Removing a by now obsolete clause in the state sanitizing
+| * | 18a50fa drbd: Now we need to handle the ed_uuid of an diskless, unconnected primary correctly
+| * | 894c6a9 drbd: Disabled the crashed_primary detection for re-attach of last data while IO is frozen
+| * | 47ff2d0 drbd: Do not allow a fencing-policy of resource-and-stonith with protocol A
+| * | 265be2d drbd: Finished the "on-no-data-accessible suspend-io;" functionality
+| * | 905cd7d drbd: Removed redundant error checks in the request code path
+| * | b9b9871 drbd: Do not send two barriers without any writes between them
+| * | 11b58e7 drbd: factored tl_restart() out of tl_clear().
+| * | 2a80699 drbd: mod_req has now a return value
+| * | 288f422 drbd: Track all IO requests on the TL, not writes only
+| * | 7e602c0 drbd: renamed drbd_tl_epoch.n_req to drbd_tl_epoch.n_writes
+| |/  
+* |   e9dd2b6 Merge branch 'for-2.6.37/core' of git://git.kernel.dk/linux-2.6-block
+|\ \  
+| * | c8bf133 Consolidate min_not_zero
+| |/  
+* | 2a48fc0 block: autoconvert trivial BKL users to private mutex
+|/  
+*   2f9e825 Merge branch 'for-2.6.36' of git://git.kernel.dk/linux-2.6-block
+|\  
+| * e7f52df drbd: revert "delay probes", feature is being re-implemented differently
+| * 85f4cc1 drbd: Initialize all members of sync_conf to their defaults [Bugz 315]
+| * 6710a57 drbd: Disable delay probes for the upcomming release
+| * 6e9624b block: push down BKL into .open and .release
+| * 7b6d91d block: unify flags for struct bio and struct request
+* |   d790d4d Merge branch 'master' into for-next
+|\ \  
+| |/  
+| * dc66c74 drbd: Fixed a race between disk-attach and unexpected state changes
+* | 698f931 fix comment/printk typos concerning "already"
+|/  
+* 2a0ab2c drbd: Reduce verbosity
+* 7383506 drbd: use drbd specific ratelimit instead of global printk_ratelimit
+* d255e5f drbd: fix hang on local read errors while disconnected
+* 32fa7e9 drbd: Removed the now empty w_io_error() function
+* 039e1fb drbd: removed duplicated #includes
+* ba11ad9 drbd: improve usage of MSG_MORE
+* 5dbf167 drbd: need to set socket bufsize early to take effect
+* 2c8d196 drbd: Revert "drbd: Create new current UUID as late as possible"
+*   ee9a360 Merge branch 'master' into for-2.6.35
+|\  
+| * 5c3c7e6 drbd: don't expose failed local READ to upper layers
+* | 4e23a59 drbd: Do not free p_uuid early, this is done in the exit code of the receiver
+* | 23ce422 drbd: Null pointer deref fix to the large "multi bio rewrite"
+* | fc8ce19 drbd: Fix: Do not detach, if a bio with a barrier fails
+* | 4604d63 drbd: Ensure to not trigger late-new-UUID creation multiple times
+* | 31a31dc drbd: Do not Oops when C_STANDALONE when uuid gets generated
+* | 2db4e42 drivers/block/drbd: Use kzalloc
+* | 0c3f345 drbd: Create new current UUID as late as possible
+* | 9a25a04 drbd: If we detect late that IO got frozen, retry after we thawed.
+* | a1c88d0 drbd: always use_bmbv, ignore setting
+* | bb3d000 drbd: allow resync requests to be larger than max_segment_size
+* | 45bb912 drbd: Allow drbd_epoch_entries to use multiple bios. This should allow for better performance if the lower level IO stack of the peers differs in limits exposed either via the queue, or via some merge_bvec_fn.
+* | 162f3ec drbd: Fixes to the new delay_probes code
+* | a8cdfd8 drbd: A fixes to the new resync speed code
+* | eedf386 drbd: Proc bits of new resync speed stuff
+* | cdd67a7 drbd: Control the actual resync rate based on the queuing delay of data packets
+* | bd26bfc drbd: Actually send delay probes
+* | 67c7ddd drbd: Four new configuration settings for resync speed control
+* | 7237bc4 drbd: Sending of delay_probes
+* | 0ced55a drbd: Receiving of delay_probes
+* | 5223671 drbd: Fixed bitmap in case of online-grow without resync
+* | 6b4388a drbd: Added transmission faults to the fault injection code
+* | 087c249 drbd: bugfix: Make resize work, if remote's size was limiting and increased in the meantime
+* | 6495d2c drbd: Implemented the --assume-clean option for drbdsetup resize
+* | b4ee79d drbd: Added some missing statics
+* | fd76438 drbd: Make sure to resync all of the new storage upon online resize
+* | e89b591 drbd: Implemented flags for the resize packet
+* | 02d9a94 drbd: Implemented the set_new_bits parameter for drbd_bm_resize()
+* | d845030 drbd: made determin_dev_size's parameter an flag enum
+* | 3a11a48 drbd: New handler: initial-split-brain
+* | 979f5c7 drbd: fail_requests_early: remove incorrect and unnecessary optimization
+* | 6666032 drbd: check for corrupt or malicous sector addresses when receiving data
+* | c3fe30b drbd: cleanup: This code path to trigger a resync is no longer needed
+* | 8d4ce82 drbd: don't start a resync without access to up-to-date Data
+* | c3470cd drbd: fix potential protocol error
+* | 8d1894e drbd: remove bogus ASSERT
+* | e0f8301 drbd: fix regression: attach while connected failed
+* | e4f925e drbd: Do not upgrade state to Outdated if already Inconsistent [Bugz 277]
+* | 8c484ee drbd: use proc_create_data with explicit NULL argument
+* |   7407cf3 Merge branch 'master' into for-2.6.35
+|\ \  
+| |/  
+* | fbd9b09 blkdev: generalize flags for blkdev_issue_fn functions
+| * 7e2455c drbd: Terminate a connection early if sending the protocol fails
+| * 7ac314c drbd: fix memory leak
+|/  
+*   2f40842 Merge branch 'for-linus' of git://git.kernel.dk/linux-2.6-block
+|\  
+| * b2b163d drbd: lc_element_by_index() never returns NULL
+| * 39ad2bb drbd: fix al-to-on-disk-bitmap for 4k logical_block_size
+| * 1f55243 drbd: Renamed overwrite_peer to primary_force
+| * d10a33c drbd: Forcing primary should also work for Consistent disks [Bugz 266]
+| * d0c3f60 drbd: Make sure we do not send state updates during an empty resync [Bugz 271]
+| * 309d160 drbd: Reduce the time an empty resync takes usually
+| * 4589d7f drbd_disconnect: grab meta.socket mutex as well
+| * 676396d fix unit of rs_same_csums accounting
+| * 580b976 drbd: fix broken state change after split-brain attach while connected
+| * 4aa83b7 drbd: fix NULL pointer dereference on 4k hard sect size
+| * cf14c2e drbd: --dry-run option for drbdsetup net ( drbdadm -- --dry-run connect <res> )
+| * 8a03ae2 block: drbd: Convert semaphore to mutex
+* | 5a0e3ad include cleanup: Update gfp.h and slab.h includes to prepare for breaking implicit slab.h inclusion from percpu.h
+|/  
+* 8a78362 block: Consolidate phys_segment and hw_segment limits
+* 086fa5f block: Rename blk_queue_max_sectors to blk_queue_max_hw_sectors
+* d3db7b4 drbd: null dereference bug
+* 98ec286 drbd: fix max_segment_size initialization
+* a393db6 drbd: Allow online resizing of DRBD devices while peer not reachable (needs to be explicitly forced)
+* b10d96c drbd: Don't go into StandAlone mode when authentification failes because of network error
+* 2d1ee87 drivers/block/drbd: Correct NULL test
+* 367a8d7 drbd: Silenced an assert that could triggered after changing write ordering method
+* 0a6dbf2 drbd: Fix for a race between IO and a detach operation [Bugz 262]
+* 0798219 drbd: Use drbd_crypto_is_hash() instead of an open coded check
+* 820cd61 drbd: remove unused #include <linux/version.h>
+* 7b886f4 drbd: remove duplicated #include
+* 49829ea drbd: Fix test of unsigned in _drbd_fault_random()
+* 7d4e9d0 drbd: Constify struct file_operations
+* 8b43aeb drbd: Following the hmac change to SHASH (see linux commit 8bd1209cfff)
+* 753c891 drbd_req.c: use part_[inc|dec]_in_flight()
+* d8c2a36 Fixed a regression in resync decission code drbd_uuid_compare() [Bugz 260]
+* 0b33a91 add missing state change on corrupt packet header in drbd_recv_header
+* 6c6c795 fix in-kernel configuration serialization
+* 83c3883 drbd: performance - don't lose unplug events
+* e656ec8 Do not deadlock in drbd_disconnect() [bugz 258]
+* 0a49216 drbdsetup X resume-io should be usable to resume IO [Bugz 256]
+* 1352994 drbd: fix check for too large lower level device
+* ad19bf6 fix grammar in printk
+* a870a3a drbd: fix in_flight rw indexing
+* 9f5180e drbd: Work on permission enforcement
+* 25d2d4e drbd: fixup for reverted dual in_flight patch
+* 6a0afdf drbd: remove tracing bits
+* ab8fafc dropping unneeded include autoconf.h
+* b411b36 The DRBD driver

@@ -1,0 +1,612 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="cpachecker-ipa" default="all">
+  
+  
+  <property file="cpachecker-ipa.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="700m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/*.rbc/**"/>
+    <exclude name="**/*.yarb/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/vssver.scc/**"/>
+    <exclude name="**/vssver2.scc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.egg"/>
+    <include name="*.zip"/>
+    <include name="*.war"/>
+    <include name="*.swc"/>
+    <include name="*.ear"/>
+    <include name="*.jar"/>
+    <include name="*.klib"/>
+    <include name="*.ane"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <exclude name="**/?*.java"/>
+    <exclude name="**/?*.form"/>
+    <exclude name="**/?*.class"/>
+    <exclude name="**/?*.groovy"/>
+    <exclude name="**/?*.scala"/>
+    <exclude name="**/?*.flex"/>
+    <exclude name="**/?*.kt"/>
+    <exclude name="**/?*.clj"/>
+  </patternset>
+  
+  <!-- JDK definitions -->
+  
+  <property name="jdk.bin.11" value="${jdk.home.11}/bin"/>
+  <path id="jdk.classpath.11">
+    <fileset dir="${jdk.home.11}">
+      <include name="../Home!/java.base"/>
+      <include name="../Home!/java.compiler"/>
+      <include name="../Home!/java.datatransfer"/>
+      <include name="../Home!/java.desktop"/>
+      <include name="../Home!/java.instrument"/>
+      <include name="../Home!/java.logging"/>
+      <include name="../Home!/java.management"/>
+      <include name="../Home!/java.management.rmi"/>
+      <include name="../Home!/java.naming"/>
+      <include name="../Home!/java.net.http"/>
+      <include name="../Home!/java.prefs"/>
+      <include name="../Home!/java.rmi"/>
+      <include name="../Home!/java.scripting"/>
+      <include name="../Home!/java.se"/>
+      <include name="../Home!/java.security.jgss"/>
+      <include name="../Home!/java.security.sasl"/>
+      <include name="../Home!/java.smartcardio"/>
+      <include name="../Home!/java.sql"/>
+      <include name="../Home!/java.sql.rowset"/>
+      <include name="../Home!/java.transaction.xa"/>
+      <include name="../Home!/java.xml"/>
+      <include name="../Home!/java.xml.crypto"/>
+      <include name="../Home!/jdk.accessibility"/>
+      <include name="../Home!/jdk.aot"/>
+      <include name="../Home!/jdk.attach"/>
+      <include name="../Home!/jdk.charsets"/>
+      <include name="../Home!/jdk.compiler"/>
+      <include name="../Home!/jdk.crypto.cryptoki"/>
+      <include name="../Home!/jdk.crypto.ec"/>
+      <include name="../Home!/jdk.dynalink"/>
+      <include name="../Home!/jdk.editpad"/>
+      <include name="../Home!/jdk.hotspot.agent"/>
+      <include name="../Home!/jdk.httpserver"/>
+      <include name="../Home!/jdk.internal.ed"/>
+      <include name="../Home!/jdk.internal.jvmstat"/>
+      <include name="../Home!/jdk.internal.le"/>
+      <include name="../Home!/jdk.internal.opt"/>
+      <include name="../Home!/jdk.internal.vm.ci"/>
+      <include name="../Home!/jdk.internal.vm.compiler"/>
+      <include name="../Home!/jdk.internal.vm.compiler.management"/>
+      <include name="../Home!/jdk.jartool"/>
+      <include name="../Home!/jdk.javadoc"/>
+      <include name="../Home!/jdk.jcmd"/>
+      <include name="../Home!/jdk.jconsole"/>
+      <include name="../Home!/jdk.jdeps"/>
+      <include name="../Home!/jdk.jdi"/>
+      <include name="../Home!/jdk.jdwp.agent"/>
+      <include name="../Home!/jdk.jfr"/>
+      <include name="../Home!/jdk.jlink"/>
+      <include name="../Home!/jdk.jshell"/>
+      <include name="../Home!/jdk.jsobject"/>
+      <include name="../Home!/jdk.jstatd"/>
+      <include name="../Home!/jdk.localedata"/>
+      <include name="../Home!/jdk.management"/>
+      <include name="../Home!/jdk.management.agent"/>
+      <include name="../Home!/jdk.management.jfr"/>
+      <include name="../Home!/jdk.naming.dns"/>
+      <include name="../Home!/jdk.naming.ldap"/>
+      <include name="../Home!/jdk.naming.rmi"/>
+      <include name="../Home!/jdk.net"/>
+      <include name="../Home!/jdk.pack"/>
+      <include name="../Home!/jdk.rmic"/>
+      <include name="../Home!/jdk.scripting.nashorn"/>
+      <include name="../Home!/jdk.scripting.nashorn.shell"/>
+      <include name="../Home!/jdk.sctp"/>
+      <include name="../Home!/jdk.security.auth"/>
+      <include name="../Home!/jdk.security.jgss"/>
+      <include name="../Home!/jdk.unsupported"/>
+      <include name="../Home!/jdk.unsupported.desktop"/>
+      <include name="../Home!/jdk.xml.dom"/>
+      <include name="../Home!/jdk.zipfs"/>
+    </fileset>
+  </path>
+  
+  <property name="project.jdk.home" value="${jdk.home.11}"/>
+  <property name="project.jdk.bin" value="${jdk.bin.11}"/>
+  <property name="project.jdk.classpath" value="jdk.classpath.11"/>
+  
+  
+  <!-- Project Libraries -->
+  
+  <path id="library.build.classpath">
+    <pathelement location="${basedir}/lib/java/build/annotations.jar"/>
+    <pathelement location="${basedir}/lib/java/build/ant-junit.jar"/>
+    <pathelement location="${basedir}/lib/java/build/error_prone_annotations.jar"/>
+    <pathelement location="${basedir}/lib/java/build/error_prone_ant.jar"/>
+    <pathelement location="${basedir}/lib/java/build/ivy.jar"/>
+    <pathelement location="${basedir}/lib/java/build/java-cup.jar"/>
+    <pathelement location="${basedir}/lib/java/build/jflex.jar"/>
+    <pathelement location="${basedir}/lib/java/build/jython-standalone-2.7.2.jar"/>
+  </path>
+  
+  <path id="library.findbugs.classpath">
+    <pathelement location="${basedir}/lib/java/findbugs/AppleJavaExtensions.jar"/>
+    <pathelement location="${basedir}/lib/java/findbugs/asm-commons.jar"/>
+    <pathelement location="${basedir}/lib/java/findbugs/asm-debug-all.jar"/>
+    <pathelement location="${basedir}/lib/java/findbugs/asm-tree.jar"/>
+    <pathelement location="${basedir}/lib/java/findbugs/asm.jar"/>
+    <pathelement location="${basedir}/lib/java/findbugs/bcel-findbugs.jar"/>
+    <pathelement location="${basedir}/lib/java/findbugs/commons-lang.jar"/>
+    <pathelement location="${basedir}/lib/java/findbugs/dom4j.jar"/>
+    <pathelement location="${basedir}/lib/java/findbugs/findbugs.jar"/>
+    <pathelement location="${basedir}/lib/java/findbugs/jFormatString.jar"/>
+    <pathelement location="${basedir}/lib/java/findbugs/jaxen.jar"/>
+    <pathelement location="${basedir}/lib/java/findbugs/jcip-annotations.jar"/>
+    <pathelement location="${basedir}/lib/java/findbugs/jsr305.jar"/>
+    <pathelement location="${basedir}/lib/java/findbugs/xml-apis.jar"/>
+  </path>
+  
+  <path id="library.java_ee_6-java_ee_6.classpath">
+    <pathelement location="${basedir}/lib/jflex/javax.annotation.jar"/>
+    <pathelement location="${basedir}/lib/jflex/javax.ejb.jar"/>
+    <pathelement location="${basedir}/lib/jflex/javax.jms.jar"/>
+    <pathelement location="${basedir}/lib/jflex/javax.persistence.jar"/>
+    <pathelement location="${basedir}/lib/jflex/javax.resource.jar"/>
+    <pathelement location="${basedir}/lib/jflex/javax.servlet.jar"/>
+    <pathelement location="${basedir}/lib/jflex/javax.servlet.jsp.jar"/>
+    <pathelement location="${basedir}/lib/jflex/javax.servlet.jsp.jstl.jar"/>
+    <pathelement location="${basedir}/lib/jflex/javax.transaction.jar"/>
+  </path>
+  
+  <path id="library.jh-javacup-1.0.classpath">
+    <pathelement location="${basedir}/lib/java/smtinterpol/jh-javacup-1.0.jar"/>
+  </path>
+  
+  <path id="library.lib.classpath">
+    <pathelement location="${basedir}/lib/apron.jar"/>
+    <pathelement location="${basedir}/lib/edu.cmu.sei.rtss.jldd.jar"/>
+    <pathelement location="${basedir}/lib/gmp.jar"/>
+    <pathelement location="${basedir}/lib/jpl.jar"/>
+    <pathelement location="${basedir}/lib/jsylvan.jar"/>
+    <pathelement location="${basedir}/lib/meconsole010.jar"/>
+  </path>
+  
+  <path id="library.protostuff-maven-plugin-1.5.9.classpath">
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-api-1.5.9-tests.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-api-1.5.9.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-collectionschema-1.5.9-tests.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-collectionschema-1.5.9.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-compiler-1.5.9-jar-with-dependencies.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-compiler-1.5.9-tests.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-compiler-1.5.9.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-core-1.5.9-tests.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-core-1.5.9.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-it-1.5.9-tests.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-json-1.5.9-tests.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-json-1.5.9.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-kvp-1.5.9-tests.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-kvp-1.5.9.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-maven-plugin-1.5.9.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-msgpack-1.5.9-tests.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-msgpack-1.5.9.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-parser-1.5.9-tests.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-parser-1.5.9.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-runtime-1.5.9-tests.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-runtime-1.5.9.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-runtime-md-1.5.9-tests.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-runtime-md-1.5.9.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-runtime-registry-1.5.9-tests.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-runtime-registry-1.5.9.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-runtime-view-1.5.9-tests.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-runtime-view-1.5.9.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-uberjar-1.5.9.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-xml-1.5.9-tests.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-xml-1.5.9.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-yaml-1.5.9-tests.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/protostuff/protostuff-yaml-1.5.9.jar"/>
+  </path>
+  
+  <path id="library.runtime.classpath">
+    <pathelement location="${basedir}/lib/java/runtime/common.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/guava.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/icu4j.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/java-cup-runtime.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/javabdd.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/javatuples-1.2.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/org.eclipse.cdt.core.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/org.eclipse.core.contenttype.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/org.eclipse.core.jobs.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/org.eclipse.core.resources.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/org.eclipse.core.runtime.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/org.eclipse.equinox.common.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/org.eclipse.equinox.preferences.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/org.eclipse.jdt.core.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/org.eclipse.osgi.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/princess.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/scala-actors.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/scala-library.jar"/>
+    <pathelement location="${basedir}/lib/java/runtime/smt-parser.jar"/>
+  </path>
+  
+  <path id="library.test.classpath">
+    <pathelement location="${basedir}/lib/java/test/guava-testlib.jar"/>
+    <pathelement location="${basedir}/lib/java/test/guava.jar"/>
+    <pathelement location="${basedir}/lib/java/test/hamcrest-core.jar"/>
+    <pathelement location="${basedir}/lib/java/test/jsr305.jar"/>
+    <pathelement location="${basedir}/lib/java/test/junit.jar"/>
+    <pathelement location="${basedir}/lib/java/test/mockito-core.jar"/>
+    <pathelement location="${basedir}/lib/java/test/objenesis.jar"/>
+    <pathelement location="${basedir}/lib/java/test/truth.jar"/>
+  </path>
+  
+  <!-- Modules -->
+  
+  
+  <!-- Module CPAChecker -->
+  
+  <dirname property="module.cpachecker.basedir" file="${ant.file}"/>
+  
+  
+  <property name="module.jdk.home.cpachecker" value=""/>
+  <property name="module.jdk.bin.cpachecker" value=""/>
+  <property name="module.jdk.classpath.cpachecker" value=""/>
+  
+  <property name="compiler.args.cpachecker" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="cpachecker.output.dir" value="${module.cpachecker.basedir}/out/production/CPAChecker"/>
+  <property name="cpachecker.testoutput.dir" value="${module.cpachecker.basedir}/out/test/CPAChecker"/>
+  
+  <path id="cpachecker.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="cpachecker.module.production.classpath"/>
+  
+  <path id="cpachecker.runtime.production.module.classpath">
+    <pathelement location="${cpachecker.output.dir}"/>
+  </path>
+  
+  <path id="cpachecker.module.classpath">
+    <pathelement location="${cpachecker.output.dir}"/>
+  </path>
+  
+  <path id="cpachecker.runtime.module.classpath">
+    <pathelement location="${cpachecker.testoutput.dir}"/>
+    <pathelement location="${cpachecker.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.cpachecker">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.cpachecker">
+    <patternset refid="excluded.from.module.cpachecker"/>
+  </patternset>
+  
+  
+  <target name="compile.module.cpachecker" depends="compile.module.cpachecker.production,compile.module.cpachecker.tests" description="Compile module CPAChecker"/>
+  
+  <target name="compile.module.cpachecker.production" description="Compile module CPAChecker; production classes"/>
+  
+  <target name="compile.module.cpachecker.tests" depends="compile.module.cpachecker.production" description="compile module CPAChecker; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.cpachecker" description="cleanup module">
+    <delete dir="${cpachecker.output.dir}"/>
+    <delete dir="${cpachecker.testoutput.dir}"/>
+  </target>
+  
+  
+  <!-- Module cpachecker-summary -->
+  
+  <dirname property="module.cpachecker-summary.basedir" file="${ant.file}"/>
+  
+  
+  <property name="module.jdk.home.cpachecker-summary" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.cpachecker-summary" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.cpachecker-summary" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.cpachecker-summary" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="cpachecker-summary.output.dir" value="${module.cpachecker-summary.basedir}/out/production/cpachecker-summary"/>
+  <property name="cpachecker-summary.testoutput.dir" value="${module.cpachecker-summary.basedir}/out/test/cpachecker-summary"/>
+  
+  <path id="cpachecker-summary.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="cpachecker-summary.module.production.classpath">
+    <path refid="${module.jdk.classpath.cpachecker-summary}"/>
+    <path refid="library.build.classpath"/>
+    <path refid="library.findbugs.classpath"/>
+    <path refid="library.lib.classpath"/>
+    <path refid="library.test.classpath"/>
+    <path refid="library.runtime.classpath"/>
+    <path refid="library.jh-javacup-1.0.classpath"/>
+    <path refid="library.protostuff-maven-plugin-1.5.9.classpath"/>
+    <path refid="library.java_ee_6-java_ee_6.classpath"/>
+  </path>
+  
+  <path id="cpachecker-summary.runtime.production.module.classpath">
+    <pathelement location="${cpachecker-summary.output.dir}"/>
+    <path refid="library.build.classpath"/>
+    <path refid="library.findbugs.classpath"/>
+    <path refid="library.lib.classpath"/>
+    <path refid="library.test.classpath"/>
+    <path refid="library.runtime.classpath"/>
+    <path refid="library.jh-javacup-1.0.classpath"/>
+    <path refid="library.protostuff-maven-plugin-1.5.9.classpath"/>
+    <path refid="library.java_ee_6-java_ee_6.classpath"/>
+  </path>
+  
+  <path id="cpachecker-summary.module.classpath">
+    <path refid="${module.jdk.classpath.cpachecker-summary}"/>
+    <pathelement location="${cpachecker-summary.output.dir}"/>
+    <path refid="library.build.classpath"/>
+    <path refid="library.findbugs.classpath"/>
+    <path refid="library.lib.classpath"/>
+    <path refid="library.test.classpath"/>
+    <path refid="library.runtime.classpath"/>
+    <path refid="library.jh-javacup-1.0.classpath"/>
+    <path refid="library.protostuff-maven-plugin-1.5.9.classpath"/>
+    <path refid="library.java_ee_6-java_ee_6.classpath"/>
+  </path>
+  
+  <path id="cpachecker-summary.runtime.module.classpath">
+    <pathelement location="${cpachecker-summary.testoutput.dir}"/>
+    <pathelement location="${cpachecker-summary.output.dir}"/>
+    <path refid="library.build.classpath"/>
+    <path refid="library.findbugs.classpath"/>
+    <path refid="library.lib.classpath"/>
+    <path refid="library.test.classpath"/>
+    <path refid="library.runtime.classpath"/>
+    <path refid="library.jh-javacup-1.0.classpath"/>
+    <path refid="library.protostuff-maven-plugin-1.5.9.classpath"/>
+    <path refid="library.java_ee_6-java_ee_6.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.cpachecker-summary">
+    <patternset refid="ignored.files"/>
+    <exclude name="org/sosy_lab/cpachecker/appengine/**"/>
+    <exclude name="org/sosy_lab/cpachecker/appengine/io/**"/>
+    <exclude name="org/sosy_lab/cpachecker/appengine/dao/**"/>
+    <exclude name="org/sosy_lab/cpachecker/appengine/log/**"/>
+    <exclude name="org/sosy_lab/cpachecker/appengine/json/**"/>
+    <exclude name="org/sosy_lab/cpachecker/appengine/util/**"/>
+    <exclude name="org/sosy_lab/cpachecker/appengine/common/**"/>
+    <exclude name="org/sosy_lab/cpachecker/appengine/entity/**"/>
+    <exclude name="org/sosy_lab/cpachecker/appengine/server/**"/>
+    <exclude name="org/sosy_lab/cpachecker/appengine/server/common/**"/>
+    <exclude name="org/sosy_lab/cpachecker/appengine/server/resource/**"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.cpachecker-summary">
+    <patternset refid="excluded.from.module.cpachecker-summary"/>
+  </patternset>
+  
+  <path id="cpachecker-summary.module.sourcepath">
+    <dirset dir="${module.cpachecker-summary.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.cpachecker-summary" depends="compile.module.cpachecker-summary.production,compile.module.cpachecker-summary.tests" description="Compile module cpachecker-summary"/>
+  
+  <target name="compile.module.cpachecker-summary.production" description="Compile module cpachecker-summary; production classes">
+    <mkdir dir="${cpachecker-summary.output.dir}"/>
+    <javac destdir="${cpachecker-summary.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.cpachecker-summary}/javac">
+      <compilerarg line="${compiler.args.cpachecker-summary}"/>
+      <bootclasspath refid="cpachecker-summary.module.bootclasspath"/>
+      <classpath refid="cpachecker-summary.module.production.classpath"/>
+      <src refid="cpachecker-summary.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.cpachecker-summary"/>
+    </javac>
+    
+    <copy todir="${cpachecker-summary.output.dir}">
+      <fileset dir="${module.cpachecker-summary.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.cpachecker-summary.tests" depends="compile.module.cpachecker-summary.production" description="compile module cpachecker-summary; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.cpachecker-summary" description="cleanup module">
+    <delete dir="${cpachecker-summary.output.dir}"/>
+    <delete dir="${cpachecker-summary.testoutput.dir}"/>
+  </target>
+  
+  
+  <!-- Module test -->
+  
+  <dirname property="module.test.basedir" file="${ant.file}"/>
+  
+  
+  <property name="module.jdk.home.test" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.test" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.test" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.test" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="test.output.dir" value="${module.test.basedir}/out/production/test"/>
+  <property name="test.testoutput.dir" value="${module.test.basedir}/out/test/test"/>
+  
+  <path id="test.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="test.module.production.classpath">
+    <path refid="${module.jdk.classpath.test}"/>
+  </path>
+  
+  <path id="test.runtime.production.module.classpath">
+    <pathelement location="${test.output.dir}"/>
+  </path>
+  
+  <path id="test.module.classpath">
+    <path refid="${module.jdk.classpath.test}"/>
+    <pathelement location="${test.output.dir}"/>
+  </path>
+  
+  <path id="test.runtime.module.classpath">
+    <pathelement location="${test.testoutput.dir}"/>
+    <pathelement location="${test.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.test">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.test">
+    <patternset refid="excluded.from.module.test"/>
+  </patternset>
+  
+  <path id="test.module.test.sourcepath">
+    <dirset dir="${module.test.basedir}/test">
+      <include name="testcase-generators"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.test" depends="compile.module.test.production,compile.module.test.tests" description="Compile module test"/>
+  
+  <target name="compile.module.test.production" description="Compile module test; production classes"/>
+  
+  <target name="compile.module.test.tests" depends="compile.module.test.production" description="compile module test; test classes" unless="skip.tests">
+    <mkdir dir="${test.testoutput.dir}"/>
+    <javac destdir="${test.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.test}/javac">
+      <compilerarg line="${compiler.args.test}"/>
+      <bootclasspath refid="test.module.bootclasspath"/>
+      <classpath refid="test.module.classpath"/>
+      <src refid="test.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.test"/>
+    </javac>
+    
+    <copy todir="${test.testoutput.dir}">
+      <fileset dir="${module.test.basedir}/test/testcase-generators">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="clean.module.test" description="cleanup module">
+    <delete dir="${test.output.dir}"/>
+    <delete dir="${test.testoutput.dir}"/>
+  </target>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.cpachecker, clean.module.cpachecker-summary, clean.module.test" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, compile.module.cpachecker, compile.module.cpachecker-summary, compile.module.test" description="build all modules"/>
+  
+  <target name="init.artifacts">
+    <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
+    <property name="artifact.output.cpachecker:jar" value="${basedir}"/>
+    <mkdir dir="${artifacts.temp.dir}"/>
+    <property name="temp.jar.path.cpachecker-summary.jar" value="${artifacts.temp.dir}/cpachecker-summary.jar"/>
+  </target>
+  
+  <target name="artifact.cpachecker:jar" depends="init.artifacts, compile.module.cpachecker-summary" description="Build &#39;cpachecker:jar&#39; artifact">
+    <property name="artifact.temp.output.cpachecker:jar" value="${artifacts.temp.dir}/cpachecker_jar"/>
+    <mkdir dir="${artifact.temp.output.cpachecker:jar}"/>
+    <jar destfile="${temp.jar.path.cpachecker-summary.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+      <zipfileset file="${basedir}/META-INF/MANIFEST.MF" prefix="META-INF"/>
+      <zipfileset dir="${cpachecker-summary.output.dir}"/>
+      <zipfileset src="${basedir}/lib/java/runtime/common.jar"/>
+      <zipfileset src="${basedir}/lib/java/runtime/guava.jar"/>
+      <zipfileset src="${basedir}/lib/java/runtime/icu4j.jar"/>
+      <zipfileset src="${basedir}/lib/java/runtime/java-cup-runtime.jar"/>
+      <zipfileset src="${basedir}/lib/java/runtime/javabdd.jar"/>
+      <zipfileset src="${basedir}/lib/java/runtime/org.eclipse.cdt.core.jar"/>
+      <zipfileset src="${basedir}/lib/java/runtime/org.eclipse.core.contenttype.jar"/>
+      <zipfileset src="${basedir}/lib/java/runtime/org.eclipse.core.jobs.jar"/>
+      <zipfileset src="${basedir}/lib/java/runtime/org.eclipse.core.resources.jar"/>
+      <zipfileset src="${basedir}/lib/java/runtime/org.eclipse.core.runtime.jar"/>
+      <zipfileset src="${basedir}/lib/java/runtime/org.eclipse.equinox.common.jar"/>
+      <zipfileset src="${basedir}/lib/java/runtime/org.eclipse.equinox.preferences.jar"/>
+      <zipfileset src="${basedir}/lib/java/runtime/org.eclipse.jdt.core.jar"/>
+      <zipfileset src="${basedir}/lib/java/runtime/org.eclipse.osgi.jar"/>
+      <zipfileset src="${basedir}/lib/java/runtime/princess.jar"/>
+      <zipfileset src="${basedir}/lib/java/runtime/scala-actors.jar"/>
+      <zipfileset src="${basedir}/lib/java/runtime/scala-library.jar"/>
+      <zipfileset src="${basedir}/lib/java/runtime/smt-parser.jar"/>
+      <zipfileset src="${basedir}/lib/java/runtime/smtinterpol-2.5-7-g64ec65d.jar"/>
+      <zipfileset src="${basedir}/lib/java/build/annotations.jar"/>
+      <zipfileset src="${basedir}/lib/java/build/ant-junit.jar"/>
+      <zipfileset src="${basedir}/lib/java/build/error_prone_annotations.jar"/>
+      <zipfileset src="${basedir}/lib/java/build/error_prone_ant.jar"/>
+      <zipfileset src="${basedir}/lib/java/build/ivy.jar"/>
+      <zipfileset src="${basedir}/lib/java/build/java-cup.jar"/>
+      <zipfileset src="${basedir}/lib/java/build/jflex.jar"/>
+      <zipfileset src="${basedir}/lib/java/findbugs/AppleJavaExtensions.jar"/>
+      <zipfileset src="${basedir}/lib/java/findbugs/asm-commons.jar"/>
+      <zipfileset src="${basedir}/lib/java/findbugs/asm-debug-all.jar"/>
+      <zipfileset src="${basedir}/lib/java/findbugs/asm-tree.jar"/>
+      <zipfileset src="${basedir}/lib/java/findbugs/asm.jar"/>
+      <zipfileset src="${basedir}/lib/java/findbugs/bcel-findbugs.jar"/>
+      <zipfileset src="${basedir}/lib/java/findbugs/commons-lang.jar"/>
+      <zipfileset src="${basedir}/lib/java/findbugs/dom4j.jar"/>
+      <zipfileset src="${basedir}/lib/java/findbugs/findbugs.jar"/>
+      <zipfileset src="${basedir}/lib/java/findbugs/jaxen.jar"/>
+      <zipfileset src="${basedir}/lib/java/findbugs/jcip-annotations.jar"/>
+      <zipfileset src="${basedir}/lib/java/findbugs/jFormatString.jar"/>
+      <zipfileset src="${basedir}/lib/java/findbugs/jsr305.jar"/>
+      <zipfileset src="${basedir}/lib/java/findbugs/xml-apis.jar"/>
+      <zipfileset src="${basedir}/lib/apron.jar"/>
+      <zipfileset src="${basedir}/lib/edu.cmu.sei.rtss.jldd.jar"/>
+      <zipfileset src="${basedir}/lib/gmp.jar"/>
+      <zipfileset src="${basedir}/lib/jpl.jar"/>
+      <zipfileset src="${basedir}/lib/jsylvan.jar"/>
+      <zipfileset src="${basedir}/lib/meconsole010.jar"/>
+      <zipfileset src="${basedir}/lib/java/test/guava-testlib.jar"/>
+      <zipfileset src="${basedir}/lib/java/test/guava.jar"/>
+      <zipfileset src="${basedir}/lib/java/test/hamcrest-core.jar"/>
+      <zipfileset src="${basedir}/lib/java/test/jsr305.jar"/>
+      <zipfileset src="${basedir}/lib/java/test/junit.jar"/>
+      <zipfileset src="${basedir}/lib/java/test/mockito-core.jar"/>
+      <zipfileset src="${basedir}/lib/java/test/objenesis.jar"/>
+      <zipfileset src="${basedir}/lib/java/test/truth.jar"/>
+    </jar>
+    <copy file="${temp.jar.path.cpachecker-summary.jar}" tofile="${artifact.temp.output.cpachecker:jar}/cpachecker-summary.jar"/>
+  </target>
+  
+  <target name="build.all.artifacts" depends="artifact.cpachecker:jar" description="Build all artifacts">
+    <mkdir dir="${artifact.output.cpachecker:jar}"/>
+    <copy todir="${artifact.output.cpachecker:jar}">
+      <fileset dir="${artifact.temp.output.cpachecker:jar}"/>
+    </copy>
+    
+    <!-- Delete temporary files -->
+    <delete dir="${artifacts.temp.dir}"/>
+  </target>
+  
+  <target name="all" depends="build.modules, build.all.artifacts" description="build all"/>
+</project>

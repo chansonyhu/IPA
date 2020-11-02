@@ -1,0 +1,55 @@
+   BENCHMARK INFORMATION
+benchmark definition:    quick-start-ipa.xml
+name:                    quick-start-ipa
+run sets:                ipa.initial.68_1.input--mouse--vsxxxaa.ko.set, ipa.regression.68_1.input--mouse--vsxxxaa.ko.set@1
+date:                    Thu, 2020-09-24 05:46:45 PDT
+tool:                    CPAchecker
+tool executable:         scripts/cpa.sh
+options:                 -heap 4000M -predicateAnalysis-IPA -setprop cpa.impacted.eliminate=true -disable-java-assertions
+resource limits:
+- memory:                4000.0 MB
+- time:                  310 s
+- cpu cores:             2
+hardware requirements:
+- cpu cores:             2
+- memory:                4000.0 MB
+------------------------------------------------------------
+
+   SYSTEM INFORMATION
+host:                    ubuntu
+os:                      Linux-4.4.0-142-generic-x86_64-with-glibc2.17
+cpu:                     Intel Core i5-8259U CPU @ 2.30GHz
+- cores:                 2
+- max frequency:         2303.0 MHz
+ram:                     4124.688384 MB
+------------------------------------------------------------
+
+
+
+ipa.initial.68_1.input--mouse--vsxxxaa.ko.set
+Run set 1 of 2 with options '-heap 4000M -predicateAnalysis-IPA -setprop cpa.impacted.eliminate=true -disable-java-assertions -outputpath ${benchmark_path_abs}/output-quick-start/ipa/68_1.input--mouse--vsxxxaa.ko.set/011.dd0d544.68_1.cil_safe.i -stats -spec ${benchmark_path_abs}/LDVErrorLabel.spc -entryfunction ldv_main0_sequence_infinite_withcheck_stateful' and propertyfile 'None'
+
+inputfile                      status                    cpu time   wall time        host
+-----------------------------------------------------------------------------------------
+011.dd0d544.68_1.cil_safe.i    true                         36.29       21.05        None
+-----------------------------------------------------------------------------------------
+Run set 1                      done                         36.28       21.34           -
+
+
+ipa.regression.68_1.input--mouse--vsxxxaa.ko.set@1
+Run set 2 of 2 with options '-heap 4000M -predicateAnalysis-IPA -setprop cpa.impacted.eliminate=true -disable-java-assertions -outputpath ${benchmark_path_abs}/output-quick-start/ipa/68_1.input--mouse--vsxxxaa.ko.set/012.21602325.68_1.cil_safe.i -isIncPred -spec ${benchmark_path_abs}/LDVErrorLabel.spc -stats -setprop cpa.impacted.pre_invariants.file=${benchmark_path_abs}/output-quick-start/ipa/68_1.input--mouse--vsxxxaa.ko.set/011.dd0d544.68_1.cil_safe.i/impacted-invariants.txt -setprop analysis.prev.program=${benchmark_path_abs}/programs/drivers--input--mouse--vsxxxaa.ko/011.dd0d544.68_1.cil_safe.i -entryfunction ldv_main0_sequence_infinite_withcheck_stateful' and propertyfile 'None'
+
+inputfile                       status                    cpu time   wall time        host
+------------------------------------------------------------------------------------------
+012.21602325.68_1.cil_safe.i    true                         12.05        9.00        None
+------------------------------------------------------------------------------------------
+Run set 2                       done                         12.03        9.22           -
+
+Statistics:              2 Files
+  correct:               0
+    correct true:        0
+    correct false:       0
+  incorrect:             0
+    incorrect true:      0
+    incorrect false:     0
+  unknown:               0

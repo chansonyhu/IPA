@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE benchmark PUBLIC "+//IDN sosy-lab.org//DTD BenchExec benchmark 1.0//EN" "http://www.sosy-lab.org/benchexec/benchmark-1.0.dtd">
+<benchmark tool="cpachecker" timelimit="90 s" hardtimelimit="100s" memlimit="11 GB" cpuCores="4">
+  <option name="-heap">10000M</option>
+  <option name="-config">config/predicateAnalysis-bam.properties</option>
+  <option name="-setprop">cpa.bam.blockHeuristic=FunctionAndLoopPartitioning</option>
+  <option name="-loopSummary"/>
+  <option name="-useTextSummary"/>
+  <option name="-outputpath">/home/qianshan/Workspace/idea/incremental/newversion/sourcecode/CPAChecker/exp/lazyExpansion/exec-out/${inputfile_name}/pnslazy</option>
+  <option name="-disable-java-assertions"/>
+  <option name="-setprop">cpa.predicate.abstraction.initialPredicates=/home/qianshan/Workspace/idea/incremental/newversion/sourcecode/CPAChecker/exp/lazyExpansion/exec-out/${inputfile_name}_0/pnslazy/precision.txt</option>
+  <option name="-setprop">cpa.predicate.predmap.file=/home/qianshan/Workspace/idea/incremental/newversion/sourcecode/CPAChecker/exp/lazyExpansion/exec-out/${inputfile_name}_1/pnslazy/precision.txt</option>
+  <option name="-summaryOutputPath">/home/qianshan/Workspace/idea/incremental/newversion/sourcecode/CPAChecker/exp/lazyExpansion/exec-out/${inputfile_name}_1/pnslazy</option>
+  <option name="-summaryInputPath">/home/qianshan/Workspace/idea/incremental/newversion/sourcecode/CPAChecker/exp/lazyExpansion/exec-out/${inputfile_name}_0/pnslazy</option>
+
+
+  <tasks name="pnslazy-1">
+    <!-- <includesfile>../programs/benchmarks/ReachSafety-Loops-VaTimeout-selected.set</includesfile> -->
+    <!-- <includesfile>../../programs/benchmarks/ReachSafety-Loops-Predicate.set</includesfile> -->
+    <includesfile>../../../exp/lazyExpansion/ldv-rest-impro-1.set</includesfile>
+    <propertyfile>../../programs/benchmarks/ReachSafety.prp</propertyfile>
+  </tasks>
+
+  <rundefinition name="Pns Reuse 01">
+    <!--<option name="-sv-comp17"/>-->
+  </rundefinition>
+
+  <columns>
+    <column title="total">CPU time for analysis</column>
+    <column title="refinements">Number of refinements</column>
+    <column title="ref time">Time for refinements</column>
+    <column title="Heap Size">Allocated heap memory</column>
+    <!--<column title="cpa time">time for CPA algorithm</column>-->
+    <!--<column title="cache hits">full cache hits</column>
+    <column title="partial cache hits">partial cache hits</column>
+    <column title="cache misses">cache misses</column>-->
+    <column title="All Call">Total number of recursive CPA calls</column>
+    <column title="LastVersion Hit">Number of last version cache hits</column>
+    <column title="PathLens">Total path lengths</column>
+    <column title="lazy status">Lazy expansion status</column>
+    <column title="SP">SP times</column>
+    <column title="holes">Number of added holes</column>
+  </columns>
+
+</benchmark>

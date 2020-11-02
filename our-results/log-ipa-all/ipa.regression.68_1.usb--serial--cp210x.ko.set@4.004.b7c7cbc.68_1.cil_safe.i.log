@@ -1,0 +1,61 @@
+scripts/cpa.sh -heap 10000M -predicateAnalysis-ABElfb-debug -setprop cpa.impacted.eliminate=true -disable-java-assertions -outputpath /home/yqs17/blazer/cpachecker-inc-pred/output-us-precise-cfa/68_1.usb--serial--cp210x.ko.set/004.b7c7cbc.68_1.cil_safe.i -isIncPred -spec /home/yqs17/blazer/cpachecker-inc-pred/LDVErrorLabel.spc -stats -setprop cpa.impacted.pre_invariants.file=/home/yqs17/blazer/cpachecker-inc-pred/output-us-precise-cfa/68_1.usb--serial--cp210x.ko.set/003.335f851.68_1.cil_safe.i/impacted-invariants.txt -setprop analysis.prev.program=/home/yqs17/blazer/cpachecker-inc-pred/programs/drivers--usb--serial--cp210x.ko/003.335f851.68_1.cil_safe.i -entryfunction ldv_main0_sequence_infinite_withcheck_stateful /home/yqs17/blazer/cpachecker-inc-pred/programs/drivers--usb--serial--cp210x.ko/004.b7c7cbc.68_1.cil_safe.i
+
+
+--------------------------------------------------------------------------------
+
+
+Running CPAchecker with Java heap of size 10000M.
+Running CPAchecker with the following extra VM options:  -Djava.io.tmpdir=/tmp/BenchExec_run_mgk7lkot/tmp
+Number of modified edges: 60
+Begin analysis 
+Read invariant objects done
+java.lang.InterruptedException: The CPU-time limit of 300s has elapsed.
+	at org.sosy_lab.common.ShutdownNotifier.shutdownIfNecessary(ShutdownNotifier.java:195)
+	at org.sosy_lab.cpachecker.util.predicates.smtInterpol.SmtInterpolEnvironment.checkSat(SmtInterpolEnvironment.java:362)
+	at org.sosy_lab.cpachecker.util.predicates.smtInterpol.SmtInterpolTheoremProver.isUnsat(SmtInterpolTheoremProver.java:64)
+	at org.sosy_lab.cpachecker.util.predicates.Solver.isUnsatUncached(Solver.java:274)
+	at org.sosy_lab.cpachecker.util.predicates.Solver.isUnsat(Solver.java:261)
+	at org.sosy_lab.cpachecker.cpa.predicate.PredicateTransferRelation.getAbstractSuccessorsForEdge(PredicateTransferRelation.java:177)
+	at org.sosy_lab.cpachecker.cpa.composite.CompositeTransferRelation.getAbstractSuccessorForSimpleEdge(CompositeTransferRelation.java:203)
+	at org.sosy_lab.cpachecker.cpa.composite.CompositeTransferRelation.getAbstractSuccessorForEdge(CompositeTransferRelation.java:183)
+	at org.sosy_lab.cpachecker.cpa.composite.CompositeTransferRelation.getAbstractSuccessors(CompositeTransferRelation.java:135)
+	at org.sosy_lab.cpachecker.cpa.arg.ARGTransferRelation.getAbstractSuccessors(ARGTransferRelation.java:70)
+	at org.sosy_lab.cpachecker.core.CPAchecker.addToInitialReachedSetByInvPreventBot(CPAchecker.java:782)
+	at org.sosy_lab.cpachecker.core.CPAchecker.initializeReachedSet(CPAchecker.java:973)
+	at org.sosy_lab.cpachecker.core.CPAchecker.run(CPAchecker.java:421)
+	at org.sosy_lab.cpachecker.cmdline.CPAMain.main(CPAMain.java:180)
+CPAchecker general statistics
+-----------------------------
+Number of program locations:     2857
+Number of CFA edges:             3168
+Number of relevant variables:    558
+Number of functions:             41
+Number of loops:                 6
+
+Time for analysis setup:                 259.382s
+  Time for cfa diff:                   7.193s
+  Time for loading CPAs:                   0.313s
+  Time for impacted traverse:              0.009s
+  Time for loading parser:        0.029s
+  Time for CFA construction:      1.589s
+    Time for parsing file(s):     0.433s
+    Time for AST to CFA:          0.562s
+    Time for CFA sanity check:    0.000s
+    Time for post-processing:     0.429s
+      Time for var class.:        0.000s
+Time for normal Analysis:                         0.000s
+CPU time for analysis:                     0.000s
+CPU time for impacted:                     0.000s
+CPU time for normal analysis:              0.000s
+CPU time for init:                         0.000s
+
+Time for Garbage Collector:       2.397s (in 50 runs)
+Garbage Collector(s) used:    PS MarkSweep, PS Scavenge
+Used heap memory:               3481MB (  3319 MiB) max;   1562MB (  1489 MiB) avg;   3591MB (  3425 MiB) peak
+Used non-heap memory:             40MB (    39 MiB) max;     38MB (    37 MiB) avg;     42MB (    40 MiB) peak
+Used in PS Old Gen pool:          54MB (    52 MiB) max;     44MB (    42 MiB) avg;    133MB (   127 MiB) peak
+Allocated heap memory:          3601MB (  3434 MiB) max;   3116MB (  2972 MiB) avg
+Allocated non-heap memory:        43MB (    41 MiB) max;     42MB (    40 MiB) avg
+Total process virtual memory:  13310MB ( 12693 MiB) max;  13306MB ( 12690 MiB) avg
+
+More details about the verification run can be found in the directory "/home/yqs17/blazer/cpachecker-inc-pred/output-us-precise-cfa/68_1.usb--serial--cp210x.ko.set/004.b7c7cbc.68_1.cil_safe.i".

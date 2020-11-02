@@ -1,0 +1,80 @@
+scripts/cpa.sh -heap 10000M -predicateAnalysis-ABEl-debug -setprop cpa.predicate.refinement.performInitialStaticRefinement=false -disable-java-assertions -outputpath /home/yqs17/blazer/cpachecker-inc-pred/output-ori-final/flat/drivers--usb--serial--mos7840.ko.082.80c0075.39_7a.cil_safe.i -stats -spec /home/yqs17/blazer/cpachecker-inc-pred/LDVErrorLabel.spc -entryfunction ldv_main0_sequence_infinite_withcheck_stateful /home/yqs17/blazer/cpachecker-inc-pred/programs-flat/drivers--usb--serial--mos7840.ko.082.80c0075.39_7a.cil_safe.i
+
+
+--------------------------------------------------------------------------------
+
+
+Running CPAchecker with Java heap of size 10000M.
+Running CPAchecker with the following extra VM options:  -Djava.io.tmpdir=/tmp/BenchExec_run_va8ij7r3/tmp
+PredicateCPA statistics
+-----------------------
+Read Precision Time:                0.000s
+Precision file size:                0
+Write Precision Time:               0.003s
+Number of abstractions:            495604 (15% of all post computations)
+  Times abstraction was reused:    0
+  Because of function entry/exit:  479793 (97%)
+  Because of loop head:            15811 (3%)
+  Because of join nodes:           0 (0%)
+  Because of threshold:            0 (0%)
+  Times precision was empty:       87092 (18%)
+  Times precision was {false}:     6553 (1%)
+  Times result was cached:         365113 (74%)
+  Times cartesian abs was used:    0 (0%)
+  Times boolean abs was used:      36846 (7%)
+  Times result was 'false':        12664 (3%)
+Number of strengthen sat checks:   187
+  Times result was 'false':        0 (0%)
+Number of coverage checks:         386891
+  BDD entailment checks:           105407
+Number of SMT sat checks:          187
+  trivial:                         187
+  cached:                          0
+
+Max ABE block size:                       76
+Number of predicates discovered:          18
+Number of abstraction locations:          0
+Max number of predicates per location:    0
+Avg number of predicates per location:    0
+Total predicates per abstraction:         339919
+Max number of predicates per abstraction: 13
+Avg number of predicates per abstraction: 7.83
+Number of irrelevant predicates:          184336 (54%)
+Number of preds handled by boolean abs:   155583 (46%)
+  Total number of models for allsat:      37243
+  Max number of models for allsat:        2
+  Avg number of models for allsat:        1.01
+
+Number of path formula cache hits:   3558701 (93%)
+
+Time for post operator:                 77.569s
+  Time for path formula creation:       20.354s
+    Actual computation:                 11.341s
+Time for strengthen operator:            1.840s
+  Time for satisfiability checks:        0.001s
+Time for prec operator:                 70.454s
+  Time for abstraction:                 57.226s (Max:     0.135s, Count: 495604)
+    Boolean abstraction:                 6.880s
+    Solving time:                        2.428s (Max:     0.016s)
+    Model enumeration time:              0.145s
+    Time for BDD construction:           0.214s (Max:     0.008s)
+Time for merge operator:                 2.374s
+Time for coverage check:                 0.162s
+  Time for BDD entailment checks:        0.127s
+Total time for SMT solver (w/o itp):     2.573s
+
+Number of BDD nodes:                               1619
+Size of BDD node table:                            466043
+Size of BDD cache:                                 46619
+Size of BDD node cleanup queue:                       37870 (count: 378106, min: 0, max: 1681, avg: 0.10)
+Time for BDD node cleanup:                             0.045s
+Time for BDD garbage collection:                       0.000s (in 0 runs)
+
+PrecisionBootstrap statistics
+-----------------------------
+Init. function predicates:                         0
+Init. global predicates:                           0
+Init. location predicates:                         0
+
+----------------------
+  CPU time for invariant read:                                      0.000s

@@ -1,0 +1,217 @@
+scripts/cpa.sh -heap 10000M -predicateAnalysis-ABEl-debug -setprop cpa.predicate.refinement.performInitialStaticRefinement=false -disable-java-assertions -outputpath /home/yqs17/blazer/cpachecker-inc-pred/output-ori-final/flat/drivers--usb--serial--metro-usb.ko.011.810ec78.39_7a.cil_safe.i -stats -spec /home/yqs17/blazer/cpachecker-inc-pred/LDVErrorLabel.spc -entryfunction ldv_main0_sequence_infinite_withcheck_stateful /home/yqs17/blazer/cpachecker-inc-pred/programs-flat/drivers--usb--serial--metro-usb.ko.011.810ec78.39_7a.cil_safe.i
+
+
+--------------------------------------------------------------------------------
+
+
+Running CPAchecker with Java heap of size 10000M.
+Running CPAchecker with the following extra VM options:  -Djava.io.tmpdir=/tmp/BenchExec_run_34t4z8bx/tmp
+PredicateCPA statistics
+-----------------------
+Read Precision Time:                0.000s
+Precision file size:                0
+Write Precision Time:               0.003s
+Number of abstractions:            95820 (18% of all post computations)
+  Times abstraction was reused:    0
+  Because of function entry/exit:  91568 (96%)
+  Because of loop head:            4252 (4%)
+  Because of join nodes:           0 (0%)
+  Because of threshold:            0 (0%)
+  Times precision was empty:       227 (0%)
+  Times precision was {false}:     400 (0%)
+  Times result was cached:         85689 (89%)
+  Times cartesian abs was used:    0 (0%)
+  Times boolean abs was used:      9504 (10%)
+  Times result was 'false':        7850 (8%)
+Number of strengthen sat checks:   124
+  Times result was 'false':        0 (0%)
+Number of coverage checks:         66013
+  BDD entailment checks:           26291
+Number of SMT sat checks:          124
+  trivial:                         124
+  cached:                          0
+
+Max ABE block size:                       24
+Number of predicates discovered:          20
+Number of abstraction locations:          0
+Max number of predicates per location:    0
+Avg number of predicates per location:    0
+Total predicates per abstraction:         83399
+Max number of predicates per abstraction: 17
+Avg number of predicates per abstraction: 8.42
+Number of irrelevant predicates:          23514 (28%)
+Number of preds handled by boolean abs:   59885 (72%)
+  Total number of models for allsat:      12573
+  Max number of models for allsat:        4
+  Avg number of models for allsat:        1.32
+
+Number of path formula cache hits:   583296 (94%)
+
+Time for post operator:                 21.951s
+  Time for path formula creation:        3.890s
+    Actual computation:                  2.460s
+Time for strengthen operator:            0.397s
+  Time for satisfiability checks:        0.002s
+Time for prec operator:                 24.925s
+  Time for abstraction:                 22.222s (Max:     0.036s, Count: 95820)
+    Boolean abstraction:                 4.693s
+    Solving time:                        1.178s (Max:     0.015s)
+    Model enumeration time:              0.332s
+    Time for BDD construction:           0.253s (Max:     0.007s)
+Time for merge operator:                 0.339s
+Time for coverage check:                 0.053s
+  Time for BDD entailment checks:        0.034s
+Total time for SMT solver (w/o itp):     1.510s
+
+Number of BDD nodes:                               5912
+Size of BDD node table:                            466043
+Size of BDD cache:                                 46619
+Size of BDD node cleanup queue:                       11434 (count: 76656, min: 0, max: 4879, avg: 0.15)
+Time for BDD node cleanup:                             0.018s
+Time for BDD garbage collection:                       0.000s (in 0 runs)
+
+PrecisionBootstrap statistics
+-----------------------------
+Init. function predicates:                         0
+Init. global predicates:                           0
+Init. location predicates:                         0
+
+----------------------
+
+AutomatonAnalysis (SVCOMP) statistics
+-------------------------------------
+Number of states:                                  1
+Total time for successor computation:                  0.304s
+Automaton transfers with branching:                0
+Automaton transfer successors:                       519636 (count: 519636, min: 1, max: 1, avg: 1.00) [1 x 519636]
+
+CPA algorithm statistics
+------------------------
+Number of iterations:            480370
+Max size of waitlist:            34
+Average size of waitlist:        18
+Number of computed successors:   519636
+Max successors for one state:    2
+Number of times merged:          19861
+Number of times stopped:         30324
+Number of times abs stopped:     10463
+Number of times nonAbs stopped:  0
+Number of times doAbstraction node:  95820
+Number of times breaked:         124
+
+Total time for CPA algorithm:        57.195s (Max:     1.121s)
+CPU time for CPA algorithm:          93.120s
+  Time for choose from waitlist:      0.259s
+  Time for precision adjustment:     25.802s
+  Time for transfer relation:        26.457s
+  Time for merge operator:            0.868s
+  Time for stop operator:             0.707s
+  Time for adding to reached set:     1.087s
+
+Predicate-Abstraction Refiner statistics
+----------------------------------------
+Avg. length of target path (in blocks):                3281 (count: 124, min: 6, max: 64, avg: 26.46)
+Number of infeasible sliced prefixes:                     0 (count: 0, min: 0, max: 0, avg: 0.00)
+
+Time for refinement:                                   4.155s
+  Counterexample analysis:                2.608s (Max:     0.112s, Calls: 124)
+    Refinement sat check:                 0.548s
+    Interpolant computation:              0.000s
+  Error path post-processing:                          0.000s
+  Path-formulas extraction:                            0.005s
+  Building the counterexample trace:                   2.609s
+  Extracting precise counterexample:                   0.000s
+  Extracting infeasible sliced prefixes:               0.000s
+  Selecting infeasible sliced prefixes:                0.000s
+  Predicate creation:                                  0.022s
+  Precision update:                                    0.025s
+  ARG update:                                          1.393s
+
+Length of refined path (in blocks):                    2806 (count: 124, min: 4, max: 50, avg: 22.63)
+Number of affected states:                             2350 (count: 124, min: 1, max: 49, avg: 18.95)
+Length (states) of path with itp 'true':                332 (count: 124, min: 0, max: 26, avg: 2.68)
+Length (states) of path with itp non-trivial itp:      2350 (count: 124, min: 1, max: 49, avg: 18.95)
+Length (states) of path with itp 'false':               124 (count: 124, min: 1, max: 1, avg: 1.00)
+Different non-trivial interpolants along paths:          27 (count: 124, min: 0, max: 2, avg: 0.22)
+Equal non-trivial interpolants along paths:            2199 (count: 124, min: 0, max: 46, avg: 17.73)
+Different precisions along paths:                         0 (count: 0, min: 0, max: 0, avg: 0.00)
+Equal precisions along paths:                             0 (count: 0, min: 0, max: 0, avg: 0.00)
+Number of refs with location-based cutoff:                0
+
+CEGAR algorithm statistics
+--------------------------
+Number of refinements:                124
+Lazy expansion status:                false
+Expansion times:                      0
+Total path lengths:                   104249
+SP times:                             1
+Number of added holes:                0
+Number of successful refinements:     124
+Number of failed refinements:         0
+Max. size of reached set before ref.: 6524
+Max. size of reached set after ref.:  3180
+Avg. size of reached set before ref.: 4668.98
+Avg. size of reached set after ref.:  819.31
+
+Total time for CEGAR algorithm:      61.574s
+CPU time for CEGAR algorithm:       101.320s
+Time for refinements:                 4.365s
+CPU time for refinements:             8.180s
+Average time for refinement:          0.035s
+Max time for refinement:              0.132s
+First time for refinement:             0.457s
+Last time for refinement:              0.587s
+Average time for analysis:          0.457s
+Number of analysis:                125
+
+Counterexample-Check Algorithm statistics
+-----------------------------------------
+Number of counterexample checks:    0
+
+Code Coverage
+-----------------------------
+  Visited lines:          3568
+  Total lines:            10
+  Line coverage:          356.800
+
+CPAchecker general statistics
+-----------------------------
+Number of program locations:     1987
+Number of CFA edges:             2253
+Number of relevant variables:    225
+Number of functions:             89
+Number of loops:                 3
+Size of reached set:             4103
+  Number of reached locations:   1462 (74%)
+    Avg states per location:     2
+    Max states per location:     69 (at node N810)
+  Number of reached functions:   32 (36%)
+  Number of partitions:          4087
+    Avg size of partitions:      1
+    Max size of partitions:      4 (with key [N741 (before /work/ldvuser/novikov/work/current--X--drivers/usb/serial/metro-usb.ko--X--defaultlinux--X--39_7a--X--cpachecker/linux/csd_deg_dscv/11/dscv_tempdir/dscv/ri/39_7a/drivers/usb/serial/metro-usb.c.prepared, line 686), Function ldv_main0_sequence_infinite_withcheck_stateful called from node N653, stack depth 1 [1bdbf9be], stack [ldv_main0_sequence_infinite_withcheck_stateful], Init])
+  Number of target states:       0
+
+Time for analysis setup:                   1.949s
+  Time for loading CPAs:                   0.407s
+  Time for impacted traverse:              0.002s
+  Time for loading parser:        0.028s
+  Time for CFA construction:      1.443s
+    Time for parsing file(s):     0.424s
+    Time for AST to CFA:          0.543s
+    Time for CFA sanity check:    0.000s
+    Time for post-processing:     0.295s
+      Time for var class.:        0.000s
+Time for Analysis:                        61.582s
+CPU time for analysis:    101.340s
+
+Time for Garbage Collector:       0.914s (in 34 runs)
+Garbage Collector(s) used:    PS MarkSweep, PS Scavenge
+Used heap memory:               2979MB (  2841 MiB) max;    839MB (   800 MiB) avg;   2986MB (  2848 MiB) peak
+Used non-heap memory:             41MB (    39 MiB) max;     38MB (    36 MiB) avg;     44MB (    42 MiB) peak
+Used in PS Old Gen pool:          39MB (    37 MiB) max;     32MB (    30 MiB) avg;     39MB (    37 MiB) peak
+Allocated heap memory:          3055MB (  2913 MiB) max;   1711MB (  1631 MiB) avg
+Allocated non-heap memory:        45MB (    43 MiB) max;     42MB (    40 MiB) avg
+Total process virtual memory:  13242MB ( 12629 MiB) max;  13240MB ( 12626 MiB) avg
+
+Verification result: TRUE. No property violation found by chosen configuration.
+More details about the verification run can be found in the directory "/home/yqs17/blazer/cpachecker-inc-pred/output-ori-final/flat/drivers--usb--serial--metro-usb.ko.011.810ec78.39_7a.cil_safe.i".

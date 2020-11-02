@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE benchmark PUBLIC "+//IDN sosy-lab.org//DTD BenchExec benchmark 1.0//EN" "http://www.sosy-lab.org/benchexec/benchmark-1.0.dtd">
+<benchmark tool="cpachecker" timelimit="90 s" hardtimelimit="100 s" memlimit="11 GB" cpuCores="4">
+  <option name="-heap">10000M</option>
+  <option name="-config">config/predicateAnalysis-bam.properties</option>
+  <option name="-stats"/>
+  <option name="-outputpath">/home/qianshan/Exp/cpachecker-summary/exp/lazyExpansion/exec-out/${inputfile_name}/ori</option>
+  <!--<option name="-outputpath">regression/temp</option>-->
+  <option name="-disable-java-assertions"/>
+  <!--<option name="-useTextSummary"/>-->
+  <option name="-summaryOutputPath">/home/qianshan/Exp/cpachecker-summary/exp/lazyExpansion/exec-out/${inputfile_name}_test/ori</option>
+  <!--<option name="-summaryOutputPath">regression/temp/</option>-->
+
+  <!--<resultfiles>**.graphml.gz</resultfiles>-->
+  <resultfiles>**.summary.txt</resultfiles>
+
+  <tasks name="ReachSafety-Loops">
+    <!--<includesfile>../../programs/benchmarks/ReachSafety-Loops-Predicate.set</includesfile>-->
+    <includesfile>../../../exp/lazyExpansion/lazy-impro.set</includesfile>
+    <propertyfile>../../programs/benchmarks/ReachSafety.prp</propertyfile>
+  </tasks>
+
+  <rundefinition name="Lazy Expansion Standalone">
+    <!--<option name="-sv-comp17"/>-->
+  </rundefinition>
+  <columns>
+    <column title="total">CPU time for analysis</column>
+    <!--<column title="reached">Total size of all ARGs</column>
+    <column title="abstractions">Number of abstractions</column>-->
+    <column title="refinements">Number of refinements</column>
+    <column title="ref time">Time for refinements</column>
+    <column title="Heap Size">Allocated heap memory</column>
+    <!--<column title="cpa time">time for CPA algorithm</column>-->
+    <!--<column title="cache hits">full cache hits</column>
+    <column title="partial cache hits">partial cache hits</column>
+    <column title="cache misses">cache misses</column>-->
+
+    <!--<column title="Actual function hits">actual function hits</column>
+    <column title="Actual loop hits">actual loop hits</column>
+    <column title="Number of loop summary">Number of loop summary</column>
+    <column title="All func and loop">Total Number of All Function</column>-->
+  </columns>
+</benchmark>
